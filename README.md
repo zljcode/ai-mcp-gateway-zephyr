@@ -1,47 +1,47 @@
 # ai-mcp-gateway
 
-`ai-mcp-gateway` is a multi-module Spring Boot project.
+`ai-mcp-gateway` 是一个多模块的 Spring Boot 项目。
 
-## Modules
+## 模块说明
 
-- `ai-mcp-gateway-app` - application bootstrap
-- `ai-mcp-gateway-api` - API contracts and DTOs
-- `ai-mcp-gateway-domain` - domain layer
-- `ai-mcp-gateway-infrastructure` - infrastructure layer
-- `ai-mcp-gateway-trigger` - trigger/adapters
-- `ai-mcp-gateway-types` - shared types and constants
-- `ai-mcp-gateway-case` - use-case layer
+- `ai-mcp-gateway-app` - 应用启动模块
+- `ai-mcp-gateway-api` - API 接口契约和 DTO
+- `ai-mcp-gateway-domain` - 领域层
+- `ai-mcp-gateway-infrastructure` - 基础设施层
+- `ai-mcp-gateway-trigger` - 触发器和适配层
+- `ai-mcp-gateway-types` - 通用类型和常量
+- `ai-mcp-gateway-case` - 用例层
 
-## Configuration
+## 配置说明
 
-The development profile uses environment-variable placeholders for database access:
+开发环境配置文件 `application-dev.yml` 使用环境变量占位符来配置数据库：
 
 - `DB_USERNAME`
 - `DB_PASSWORD`
 - `DB_URL`
 
-An example file is provided in [`.env.example`](./.env.example).
+示例环境变量文件见 [`.env.example`](./.env.example)。
 
-Default placeholder values in `application-dev.yml` are:
+当前默认占位值为：
 
 - `your_username`
 - `your_password`
 - `jdbc:mysql://127.0.0.1:3306/your_database?...`
 
-## Local Setup
+## 本地启动
 
-1. Copy [`.env.example`](./.env.example) to `.env`.
-2. Fill in your local database values.
-3. Load the variables in your shell or IDE before starting the app.
-4. Run the application from the `ai-mcp-gateway-app` module.
+1. 复制 [`.env.example`](./.env.example) 为 `.env`。
+2. 填写你本地的数据库配置。
+3. 启动前在终端或 IDE 中加载这些环境变量。
+4. 以 `ai-mcp-gateway-app` 模块作为启动入口运行应用。
 
-## Build
+## 构建
 
 ```bash
 mvn clean package
 ```
 
-## Notes
+## 说明
 
-- The project targets Java 17.
-- `application-dev.yml` is the active profile by default through `application.yml`.
+- 项目基于 Java 17。
+- `application.yml` 默认激活 `dev` 配置。
