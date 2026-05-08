@@ -2,6 +2,9 @@
 **/target/
 *.iml
 *.log
+/.env
+/.env.*
+!.env.example
 /.classpath
 /.project
 /.settings/
