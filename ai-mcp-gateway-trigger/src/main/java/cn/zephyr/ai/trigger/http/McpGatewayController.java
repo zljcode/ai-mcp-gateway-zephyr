@@ -2,21 +2,25 @@ package cn.zephyr.ai.trigger.http;
 
 import cn.zephyr.ai.api.IMcpGatewayService;
 import cn.zephyr.ai.cases.mcp.IMcpSessionService;
+import cn.zephyr.ai.domain.session.model.valobj.McpSchemaVO;
+import cn.zephyr.ai.domain.session.service.ISessionMessageService;
 import cn.zephyr.ai.types.enums.ResponseCode;
 import cn.zephyr.ai.types.exception.AppException;
+import com.alibaba.fastjson.JSON;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.loader.ResourceEntry;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.ServerSentEvent;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import javax.annotation.Resource;
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * @author Zhulejun @Zephyr
@@ -25,12 +29,15 @@ import javax.annotation.Resource;
  */
 @Slf4j
 @RestController
-@CrossOrigin
-@RequestMapping
+@CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS})
+@RequestMapping("/")
 public class McpGatewayController implements IMcpGatewayService {
 
     @Resource
     private IMcpSessionService mcpSessionService;
+    // todo 暂时调用 domain 测试，后续调用 case 编排
+    @Resource
+    private ISessionMessageService serviceMessageService;
 
     /*
         如果你的启动后，访问不到服务，那么可以在 System.out.println("xxxx"); 一行打断点，
@@ -43,6 +50,7 @@ public class McpGatewayController implements IMcpGatewayService {
 
     /**
      * 实现SSE连接接口 建立SSE连接，创建会话
+     *
      * @param gatewayId 网关ID
      * @return
      * @throws Exception
@@ -63,4 +71,49 @@ public class McpGatewayController implements IMcpGatewayService {
             throw e;
         }
     }
+
+    /**
+     * 处理 sse 消息，响应会话
+     *
+     * @param gatewayId   网关ID
+     * @param sessionId   会话ID
+     * @param messageBody 请求消息
+     * @return 响应结果
+     * <br/>
+     * {
+     * "jsonrpc": "2.0",
+     * "method": "initialize",
+     * "id": "95835f74-0",
+     * "params": {
+     * "protocolVersion": "2024-11-05",
+     * "capabilities": {},
+     * "clientInfo": {
+     * "name": "Java SDK MCP Client",
+     * "version": "1.0.0"
+     * }
+     * }
+     * }
+     */
+    @PostMapping(value = "{gatewayId}/mcp/sse", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Mono<ResponseEntity<Object>> handlerMessage(@PathVariable("gatewayId") String gatewayId,
+                                                       @RequestParam String sessionId,
+                                                       @RequestBody String messageBody) {
+        try {
+            log.info("处理 MCP SSE 消息，gatewayId:{} sessionId:{} messageBody:{}", gatewayId, sessionId, messageBody);
+
+            McpSchemaVO.JSONRPCMessage jsonrpcMessage = McpSchemaVO.deserializeJsonRpcMessage(messageBody);
+            log.info("序列化消息：{}", jsonrpcMessage.jsonrpc());
+
+            //暂时直接调用 domain, 后续调整
+            McpSchemaVO.JSONRPCResponse jsonrpcResponse = serviceMessageService.processHandlerMessage((McpSchemaVO.JSONRPCRequest) jsonrpcMessage);
+            log.info("调用结果:{}", JSON.toJSONString(jsonrpcResponse));
+
+            return Mono.just(ResponseEntity.ok(Map.of("status", "sent vis SSE")));
+
+        } catch (IOException e) {
+            log.info("处理 MCP SSE 消息失败，gatewayId:{} sessionId:{} messageBody:{}", gatewayId, sessionId, messageBody, e);
+            return Mono.empty();
+        }
+    }
+
 }
