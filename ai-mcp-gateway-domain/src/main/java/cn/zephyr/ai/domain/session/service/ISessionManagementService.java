@@ -10,29 +10,31 @@ import cn.zephyr.ai.domain.session.model.valobj.SessionConfigVO;
  */
 public interface ISessionManagementService {
     /**
-     * 创建会话
-     *
-     * @param sessionId
-     * @return
+     * 创建回话
+     * @return 会话配置
      */
-    public SessionConfigVO createSession(String sessionId);
+    SessionConfigVO createSession(String gatewayId);
 
     /**
-     * 删除会话
-     *
-     * @param sessionId
+     * 删除回话
+     * @param sessionId 会话ID
      */
-    public void removeSession(String sessionId);
+    void removeSession(String sessionId);
 
     /**
      * 获取会话
-     *
-     * @param sessionId
+     * @param sessionId 会话ID
+     * @return 会话配置
      */
-    public SessionConfigVO  getSession(String sessionId);
+    SessionConfigVO getSession(String sessionId);
 
     /**
-     * 关闭会话服务
+     * 清理过期会话
      */
-    public void shutDown();
+    void cleanupExpiredSessions();
+
+    /**
+     * 关闭服务时，清理资源使用
+     */
+    void shutdown();
 }
