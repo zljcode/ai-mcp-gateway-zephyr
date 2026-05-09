@@ -33,6 +33,15 @@ spring:
     connection-test-query: SELECT 1
   type: com.zaxxer.hikari.HikariDataSource
 
+  # spring ai
+  ai:
+    openai:
+      base-url: https://api.deepseek.com
+      api-key: sk-7bce599f41d544bfa6ccf5ef248f797e
+      chat:
+        options:
+          model: deepseek-v4-flash
+
 # MyBatis 配置【如需使用记得打开】
 #mybatis:
 #  mapper-locations: classpath:/mybatis/mapper/*.xml
