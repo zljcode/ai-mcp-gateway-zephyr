@@ -1,7 +1,9 @@
 package cn.zephyr.ai.api;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.ServerSentEvent;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 /**
  * @author Zhulejun @Zephyr
@@ -18,4 +20,13 @@ public interface IMcpGatewayService {
      * @throws Exception
      */
     Flux<ServerSentEvent<String>> establishSSEConnection(String gatewayId) throws Exception;
+
+    /**
+     * 处理SSE消息
+     * @param gatewayId
+     * @param sessionId
+     * @param messageBody
+     * @return
+     */
+    Mono<ResponseEntity<Void>> handleMessage(String gatewayId, String sessionId, String messageBody);
 }

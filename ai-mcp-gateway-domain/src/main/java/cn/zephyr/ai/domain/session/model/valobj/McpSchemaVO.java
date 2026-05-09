@@ -94,6 +94,8 @@ public final class McpSchemaVO {
             @JsonProperty("params") Object params) implements JSONRPCMessage {
     }
 
+
+
     /**
      * 响应对象
      *
