@@ -28,13 +28,15 @@ public class ApiTest {
     public void test_mcp() {
         ChatClient chatClient = chatClientBuilder.defaultOptions(
                         OpenAiChatOptions.builder()
-                                .model("deepseek-v4-flash")
+                                .model("deepseek-chat")
+                                .temperature(0.7)
+                                .maxTokens(2000)
                                 .toolCallbacks(new SyncMcpToolCallbackProvider(sseMcpClient02()).getToolCallbacks())
                                 .build())
                 .build();
 
         //由哪些工具可以使用
-        log.info("测试结果：{}", chatClient.prompt("由哪些工具可以使用").call().content());
+        log.info("测试结果：{}", chatClient.prompt("将xiaozhu转换为大写").call().content());
     }
 
 

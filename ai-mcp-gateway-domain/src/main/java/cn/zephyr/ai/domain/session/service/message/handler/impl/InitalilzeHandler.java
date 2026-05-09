@@ -14,7 +14,7 @@ import java.util.Map;
  * @create 2026/5/9 下午4:42
  */
 @Slf4j
-@Service("initalilzeHandler")
+@Service("initializeHandler")
 public class InitalilzeHandler implements IRequestHandler {
     @Override
     public McpSchemaVO.JSONRPCResponse handle(McpSchemaVO.JSONRPCRequest message) {
@@ -23,11 +23,11 @@ public class InitalilzeHandler implements IRequestHandler {
         return new McpSchemaVO.JSONRPCResponse("2.0", message.id(), Map.of(
                 "protocolVersion", "2024-11-05",
                 "capabilities", Map.of(
-                        "tool", Map.of(),
+                        "tools", Map.of(),
                         "resources", Map.of()
                 ),
                 "serverInfo", Map.of(
-                        "name", "MCP Weather Proxy Server",
+                        "name", "MCP Word Util Proxy Server",
                         "version", "1.0.0"
                 )), null
         );

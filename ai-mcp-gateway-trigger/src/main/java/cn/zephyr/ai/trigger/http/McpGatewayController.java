@@ -3,14 +3,15 @@ package cn.zephyr.ai.trigger.http;
 import cn.zephyr.ai.api.IMcpGatewayService;
 import cn.zephyr.ai.cases.mcp.IMcpSessionService;
 import cn.zephyr.ai.domain.session.model.valobj.McpSchemaVO;
+import cn.zephyr.ai.domain.session.model.valobj.SessionConfigVO;
 import cn.zephyr.ai.domain.session.service.ISessionMessageService;
+import cn.zephyr.ai.domain.session.service.impl.SessionManagementService;
 import cn.zephyr.ai.types.enums.ResponseCode;
 import cn.zephyr.ai.types.exception.AppException;
-import com.alibaba.fastjson.JSON;
-import lombok.Setter;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.loader.ResourceEntry;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.ServerSentEvent;
@@ -38,6 +39,11 @@ public class McpGatewayController implements IMcpGatewayService {
     // todo 暂时调用 domain 测试，后续调用 case 编排
     @Resource
     private ISessionMessageService serviceMessageService;
+    @Autowired
+    private SessionManagementService sessionManagementService;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     /*
         如果你的启动后，访问不到服务，那么可以在 System.out.println("xxxx"); 一行打断点，
@@ -94,25 +100,39 @@ public class McpGatewayController implements IMcpGatewayService {
      * }
      * }
      */
+    @Override
     @PostMapping(value = "{gatewayId}/mcp/sse", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Mono<ResponseEntity<Object>> handlerMessage(@PathVariable("gatewayId") String gatewayId,
-                                                       @RequestParam String sessionId,
+    public Mono<ResponseEntity<Void>> handleMessage(@PathVariable("gatewayId") String gatewayId,
+                                                       @RequestParam("sessionId") String sessionId,
                                                        @RequestBody String messageBody) {
         try {
             log.info("处理 MCP SSE 消息，gatewayId:{} sessionId:{} messageBody:{}", gatewayId, sessionId, messageBody);
+
+            SessionConfigVO session = sessionManagementService.getSession(sessionId);
+            if (null == session) {
+                log.warn("会话不存在或已过期，gatewayId：{} sessionId:{}", gatewayId, sessionId);
+                return Mono.just(ResponseEntity.notFound().build());
+            }
+
 
             McpSchemaVO.JSONRPCMessage jsonrpcMessage = McpSchemaVO.deserializeJsonRpcMessage(messageBody);
             log.info("序列化消息：{}", jsonrpcMessage.jsonrpc());
 
             //暂时直接调用 domain, 后续调整
-            McpSchemaVO.JSONRPCResponse jsonrpcResponse = serviceMessageService.processHandlerMessage((McpSchemaVO.JSONRPCRequest) jsonrpcMessage);
-            log.info("调用结果:{}", JSON.toJSONString(jsonrpcResponse));
+            McpSchemaVO.JSONRPCResponse jsonrpcResponse = serviceMessageService.processHandlerMessage(jsonrpcMessage);
+            if (null != jsonrpcResponse) {
+                String responseJson = objectMapper.writeValueAsString(jsonrpcResponse);
+                session.getSink().tryEmitNext(ServerSentEvent.<String>builder()
+                        .event("message")
+                        .data(responseJson)
+                        .build());
+            }
 
-            return Mono.just(ResponseEntity.ok(Map.of("status", "sent vis SSE")));
+            return Mono.just(ResponseEntity.accepted().build());
 
         } catch (IOException e) {
             log.info("处理 MCP SSE 消息失败，gatewayId:{} sessionId:{} messageBody:{}", gatewayId, sessionId, messageBody, e);
-            return Mono.empty();
+            return Mono.just(ResponseEntity.internalServerError().build());
         }
     }
 

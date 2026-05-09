@@ -2,18 +2,56 @@ package cn.zephyr.ai.domain.session.service.message.handler.impl;
 
 import cn.zephyr.ai.domain.session.model.valobj.McpSchemaVO;
 import cn.zephyr.ai.domain.session.service.message.handler.IRequestHandler;
+import cn.zephyr.ai.types.enums.McpErrorCodes;
 import jakarta.websocket.MessageHandler;
 import org.springframework.stereotype.Service;
 
+import java.util.Locale;
+import java.util.Map;
+
 /**
  * @author Zhulejun @Zephyr
- * @description 工具调用处理器
+ * @description 执行的工具调用
  * @create 2026/5/9 下午4:43
  */
 @Service("toolsCallHandler")
-public class ToolsCallHandler  implements IRequestHandler {
+public class ToolsCallHandler implements IRequestHandler {
     @Override
     public McpSchemaVO.JSONRPCResponse handle(McpSchemaVO.JSONRPCRequest message) {
-        return null;
+        Object id = message.id();
+        Object params = message.params();
+
+        if (!(params instanceof Map)) {
+            new McpSchemaVO.JSONRPCResponse.JSONRPCError(McpErrorCodes.INVALID_PARAMS, "Invalid arguments format", null);
+
+            return new McpSchemaVO.JSONRPCResponse("2.0",
+                    message.id(), null,
+                    new McpSchemaVO.JSONRPCResponse.JSONRPCError(McpErrorCodes.INVALID_PARAMS, "无效参数 - 无效的方法参数", null));
+        }
+
+        Map<String, Object> paramsMap = (Map<String, Object>) params;
+        String toolName = (String) paramsMap.get("name");
+        Object argumentsObj = paramsMap.get("arguments");
+
+        Map<String, Object> arguments = (Map<String, Object>) argumentsObj;
+
+        if ("toUpperCase".equals(toolName)) {
+            String word = arguments.get("word").toString();
+
+            return new McpSchemaVO.JSONRPCResponse("2.0",
+                    message.id(), Map.of(
+                    "content", new Object[]{
+                            Map.of(
+                                    "type", "text",
+                                    "text", word.toUpperCase()
+                            )
+                    }
+            ), null);
+        }
+
+        return new McpSchemaVO.JSONRPCResponse("2.0",
+                message.id(),
+                null,
+                new McpSchemaVO.JSONRPCResponse.JSONRPCError(McpErrorCodes.METHOD_NOT_FOUND, "方法未找到 - 方法不存在或不可用", null));
     }
 }
