@@ -3,7 +3,9 @@ package cn.zephyr.ai.domain.session.service.impl;
 import cn.zephyr.ai.domain.session.model.valobj.SessionConfigVO;
 import cn.zephyr.ai.domain.session.service.ISessionManagementService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.codec.ServerSentEvent;
+import org.springframework.stereotype.Service;
 import reactor.core.publisher.Sinks;
 
 import java.util.Map;
@@ -19,6 +21,7 @@ import java.util.concurrent.TimeUnit;
  * @create 2026/5/9 上午9:51
  */
 @Slf4j
+@Service
 public class SessionManagementService implements ISessionManagementService {
 
     /**
@@ -44,7 +47,8 @@ public class SessionManagementService implements ISessionManagementService {
         log.info("会话管理服务已启动，会话超时时间：{} 分钟", SESSION_TIMEOUT_MINUTES);
     }
 
-    private void cleanupExpiredSessions() {
+    @Override
+    public void cleanupExpiredSessions() {
         int cleanedCount = 0;
 
         for (Map.Entry<String, SessionConfigVO> entry : activeSessions.entrySet()) {
@@ -64,13 +68,13 @@ public class SessionManagementService implements ISessionManagementService {
 
     @Override
     public SessionConfigVO createSession(String gatewayId) {
-        log.info("创建会话 gatewayId:{}", gatewayId);
+        log.info("创建会话-gatewayId:{}", gatewayId);
 
         String sessionId = UUID.randomUUID().toString();
 
         Sinks.Many<ServerSentEvent<String>> sink = Sinks.many().multicast().onBackpressureBuffer();
 
-        //发送端点消息 - 告知客户端消息请求地址（客户端第二次会使用 messageEndpoint 进行请求会话）
+        // 发送端点消息 - 告知客户端消息请求地址（客户端第二次会使用 messageEndpoint 进行请求会话）
         String messageEndpoint = "/" + gatewayId + "/mcp/message?sessionId=" + sessionId;
         sink.tryEmitNext(ServerSentEvent.<String>builder()
                 .event("endpoint")
@@ -80,7 +84,8 @@ public class SessionManagementService implements ISessionManagementService {
         SessionConfigVO sessionConfigVO = new SessionConfigVO(sessionId, sink);
 
         activeSessions.put(sessionId, sessionConfigVO);
-        log.info("创建会话 gatewayId:{}, sessionId:{}，当前活跃会话数：{}", gatewayId, sessionId, activeSessions.size());
+
+        log.info("创建会话-gatewayId:{} sessionId:{},当前活跃会话数:{}", gatewayId, sessionId, activeSessions.size());
 
         return sessionConfigVO;
     }
@@ -122,23 +127,24 @@ public class SessionManagementService implements ISessionManagementService {
     }
 
     @Override
-    public void shutDown() {
+    public void shutdown() {
         log.info("关闭会话管理服务...");
 
         for (String sessionId : activeSessions.keySet()) {
             removeSession(sessionId);
         }
 
-        //关闭清理调度器
+        // 关闭清理调度器
         cleanupScheduler.shutdown();
 
         try {
-            //等待五秒让正在执行的任务完成
-            if (!cleanupScheduler.awaitTermination(5, TimeUnit.SECONDS)) ;
-            //超时强制关闭
-            cleanupScheduler.shutdown();
+            // 等待5秒让正在执行的任务完成
+            if (!cleanupScheduler.awaitTermination(5, TimeUnit.SECONDS)) {
+                // 超时强制关闭
+                cleanupScheduler.shutdown();
+            }
         } catch (InterruptedException e) {
-            //异常强制关闭
+            // 异常强制关闭
             cleanupScheduler.shutdown();
             Thread.currentThread().interrupt();
         }
