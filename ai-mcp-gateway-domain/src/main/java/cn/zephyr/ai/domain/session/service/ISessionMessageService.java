@@ -1,5 +1,6 @@
 package cn.zephyr.ai.domain.session.service;
 
+import cn.zephyr.ai.domain.session.model.entity.HandleMessageCommandEntity;
 import cn.zephyr.ai.domain.session.model.valobj.McpSchemaVO;
 import org.springframework.stereotype.Service;
 
@@ -12,5 +13,7 @@ import org.springframework.stereotype.Service;
 public interface ISessionMessageService {
 
     McpSchemaVO.JSONRPCResponse processHandlerMessage(String gatewayId,McpSchemaVO.JSONRPCMessage message);
+
+    McpSchemaVO.JSONRPCResponse processHandlerMessage(HandleMessageCommandEntity commandEntity);
 
 }
