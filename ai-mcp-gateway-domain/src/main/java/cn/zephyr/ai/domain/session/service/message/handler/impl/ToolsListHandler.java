@@ -128,9 +128,11 @@ public class ToolsListHandler implements IRequestHandler {
      */
     private Map<String, Object> buildProperty(McpGatewayToolConfigVO current, Map<String, List<McpGatewayToolConfigVO>> childrenMap) {
         Map<String, Object> properties = new HashMap<>();
-        properties.put("type",current.getMcpType());
-        if(current.getMcpType() != null){
-            properties.put("description",current.getMcpDesc());
+        if (current.getMcpType() != null) {
+            properties.put("type", current.getMcpType());
+        }
+        if (current.getMcpDesc() != null && !current.getMcpDesc().isBlank()) {
+            properties.put("description", current.getMcpDesc());
         }
 
         //校验孩子元素

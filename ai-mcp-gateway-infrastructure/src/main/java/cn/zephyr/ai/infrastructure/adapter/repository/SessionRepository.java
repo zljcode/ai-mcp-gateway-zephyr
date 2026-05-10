@@ -2,6 +2,7 @@ package cn.zephyr.ai.infrastructure.adapter.repository;
 
 import cn.zephyr.ai.domain.session.adapter.repository.ISessionRepository;
 import cn.zephyr.ai.domain.session.model.valobj.gateway.McpGatewayConfigVO;
+import cn.zephyr.ai.domain.session.model.valobj.gateway.McpGatewayProtocolConfigVO;
 import cn.zephyr.ai.domain.session.model.valobj.gateway.McpGatewayToolConfigVO;
 import cn.zephyr.ai.infrastructure.dao.IMcpGatewayDao;
 import cn.zephyr.ai.infrastructure.dao.IMcpProtocolMappingDao;
@@ -87,4 +88,22 @@ public class SessionRepository implements ISessionRepository {
 
         return mcpGatewayToolConfigVOList;
     }
+
+    @Override
+    public McpGatewayProtocolConfigVO queryMcpGatewayProtocolConfig(String gatewayId) {
+        McpProtocolRegistryPO mcpProtocolRegistryPO = mcpProtocolRegistryDao.queryMcpProtocolRegistryByGatewayId(gatewayId);
+        if (null == mcpProtocolRegistryPO) {
+            return null;
+        }
+
+        McpGatewayProtocolConfigVO.HTTPConfig httpConfig = new McpGatewayProtocolConfigVO.HTTPConfig();
+        httpConfig.setHttpUrl(mcpProtocolRegistryPO.getHttpUrl());
+        httpConfig.setHttpHeaders(mcpProtocolRegistryPO.getHttpHeaders());
+        httpConfig.setHttpMethod(mcpProtocolRegistryPO.getHttpMethod());
+        httpConfig.setTimeout(mcpProtocolRegistryPO.getTimeout());
+
+        return McpGatewayProtocolConfigVO.builder().httpConfig(httpConfig).build();
+    }
+
+
 }

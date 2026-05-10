@@ -34,4 +34,5 @@ public interface IMcpProtocolMappingDao {
 
     List<McpProtocolMappingPO> queryMcpGatewayToolConfigList(String gatewayId);
 
+
 }
