@@ -32,4 +32,6 @@ public interface IMcpProtocolMappingDao {
     /** 查询全部记录。 */
     List<McpProtocolMappingPO> selectAll();
 
+    List<McpProtocolMappingPO> queryMcpGatewayToolConfigList(String gatewayId);
+
 }

@@ -161,4 +161,5 @@
         WHERE gateway_id = #{gateway_id}
     </select>
 
+
 </mapper>
