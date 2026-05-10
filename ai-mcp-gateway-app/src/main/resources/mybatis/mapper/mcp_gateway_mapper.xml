@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zephyr.ai.infrastructure.dao.IMcpGatewayDao">
+
+    <!-- 基础结果映射。 -->
+    <resultMap id="BaseResultMap" type="cn.zephyr.ai.infrastructure.dao.po.McpGatewayPO">
+        <id column="id" property="id"/>
+        <result column="gateway_id" property="gatewayId"/>
+        <result column="gateway_name" property="gatewayName"/>
+        <result column="gateway_desc" property="gatewayDesc"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 基础列清单，供查询复用。 -->
+    <sql id="BaseColumns">
+        id, gateway_id, gateway_name, gateway_desc, status, create_time, update_time
+    </sql>
+
+    <!-- 新增网关配置。 -->
+    <insert id="insert" parameterType="cn.zephyr.ai.infrastructure.dao.po.McpGatewayPO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO mcp_gateway (gateway_id, gateway_name, gateway_desc, status, create_time, update_time)
+        VALUES (#{gatewayId}, #{gatewayName}, #{gatewayDesc}, #{status}, #{createTime}, #{updateTime})
+    </insert>
+
+    <!-- 选择性新增网关配置。 -->
+    <insert id="insertSelective" parameterType="cn.zephyr.ai.infrastructure.dao.po.McpGatewayPO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO mcp_gateway
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="gatewayId != null">gateway_id,</if>
+            <if test="gatewayName != null">gateway_name,</if>
+            <if test="gatewayDesc != null">gateway_desc,</if>
+            <if test="status != null">status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="gatewayId != null">#{gatewayId},</if>
+            <if test="gatewayName != null">#{gatewayName},</if>
+            <if test="gatewayDesc != null">#{gatewayDesc},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <!-- 根据主键完整更新。 -->
+    <update id="updateById" parameterType="cn.zephyr.ai.infrastructure.dao.po.McpGatewayPO">
+        UPDATE mcp_gateway
+        SET gateway_id = #{gatewayId},
+            gateway_name = #{gatewayName},
+            gateway_desc = #{gatewayDesc},
+            status = #{status},
+            create_time = #{createTime},
+            update_time = #{updateTime}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据主键选择性更新。 -->
+    <update id="updateByIdSelective" parameterType="cn.zephyr.ai.infrastructure.dao.po.McpGatewayPO">
+        UPDATE mcp_gateway
+        <set>
+            <if test="gatewayId != null">gateway_id = #{gatewayId},</if>
+            <if test="gatewayName != null">gateway_name = #{gatewayName},</if>
+            <if test="gatewayDesc != null">gateway_desc = #{gatewayDesc},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据主键删除。 -->
+    <delete id="deleteById" parameterType="java.lang.Long">
+        DELETE FROM mcp_gateway WHERE id = #{id}
+    </delete>
+
+    <!-- 根据主键查询。 -->
+    <select id="selectById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT <include refid="BaseColumns"/>
+        FROM mcp_gateway
+        WHERE id = #{id}
+    </select>
+
+    <!-- 查询全部网关配置。 -->
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT <include refid="BaseColumns"/>
+        FROM mcp_gateway
+        ORDER BY id DESC
+    </select>
+
+</mapper>

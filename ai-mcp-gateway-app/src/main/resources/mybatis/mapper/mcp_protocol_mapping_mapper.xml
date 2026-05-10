@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zephyr.ai.infrastructure.dao.IMcpProtocolMappingDao">
+
+    <!-- 基础结果映射。 -->
+    <resultMap id="BaseResultMap" type="cn.zephyr.ai.infrastructure.dao.po.McpProtocolMappingPO">
+        <id column="id" property="id"/>
+        <result column="gateway_id" property="gatewayId"/>
+        <result column="tool_id" property="toolId"/>
+        <result column="mapping_type" property="mappingType"/>
+        <result column="parent_path" property="parentPath"/>
+        <result column="field_name" property="fieldName"/>
+        <result column="mcp_path" property="mcpPath"/>
+        <result column="mcp_type" property="mcpType"/>
+        <result column="mcp_desc" property="mcpDesc"/>
+        <result column="is_required" property="isRequired"/>
+        <result column="http_path" property="httpPath"/>
+        <result column="http_location" property="httpLocation"/>
+        <result column="sort_order" property="sortOrder"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 基础列清单，供查询复用。 -->
+    <sql id="BaseColumns">
+        id, gateway_id, tool_id, mapping_type, parent_path, field_name, mcp_path, mcp_type,
+        mcp_desc, is_required, http_path, http_location, sort_order, create_time, update_time
+    </sql>
+
+    <!-- 新增映射配置。 -->
+    <insert id="insert" parameterType="cn.zephyr.ai.infrastructure.dao.po.McpProtocolMappingPO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO mcp_protocol_mapping (
+            gateway_id, tool_id, mapping_type, parent_path, field_name, mcp_path, mcp_type,
+            mcp_desc, is_required, http_path, http_location, sort_order, create_time, update_time
+        ) VALUES (
+            #{gatewayId}, #{toolId}, #{mappingType}, #{parentPath}, #{fieldName}, #{mcpPath}, #{mcpType},
+            #{mcpDesc}, #{isRequired}, #{httpPath}, #{httpLocation}, #{sortOrder}, #{createTime}, #{updateTime}
+        )
+    </insert>
+
+    <!-- 选择性新增映射配置。 -->
+    <insert id="insertSelective" parameterType="cn.zephyr.ai.infrastructure.dao.po.McpProtocolMappingPO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO mcp_protocol_mapping
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="gatewayId != null">gateway_id,</if>
+            <if test="toolId != null">tool_id,</if>
+            <if test="mappingType != null">mapping_type,</if>
+            <if test="parentPath != null">parent_path,</if>
+            <if test="fieldName != null">field_name,</if>
+            <if test="mcpPath != null">mcp_path,</if>
+            <if test="mcpType != null">mcp_type,</if>
+            <if test="mcpDesc != null">mcp_desc,</if>
+            <if test="isRequired != null">is_required,</if>
+            <if test="httpPath != null">http_path,</if>
+            <if test="httpLocation != null">http_location,</if>
+            <if test="sortOrder != null">sort_order,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="gatewayId != null">#{gatewayId},</if>
+            <if test="toolId != null">#{toolId},</if>
+            <if test="mappingType != null">#{mappingType},</if>
+            <if test="parentPath != null">#{parentPath},</if>
+            <if test="fieldName != null">#{fieldName},</if>
+            <if test="mcpPath != null">#{mcpPath},</if>
+            <if test="mcpType != null">#{mcpType},</if>
+            <if test="mcpDesc != null">#{mcpDesc},</if>
+            <if test="isRequired != null">#{isRequired},</if>
+            <if test="httpPath != null">#{httpPath},</if>
+            <if test="httpLocation != null">#{httpLocation},</if>
+            <if test="sortOrder != null">#{sortOrder},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <!-- 根据主键完整更新。 -->
+    <update id="updateById" parameterType="cn.zephyr.ai.infrastructure.dao.po.McpProtocolMappingPO">
+        UPDATE mcp_protocol_mapping
+        SET gateway_id = #{gatewayId},
+            tool_id = #{toolId},
+            mapping_type = #{mappingType},
+            parent_path = #{parentPath},
+            field_name = #{fieldName},
+            mcp_path = #{mcpPath},
+            mcp_type = #{mcpType},
+            mcp_desc = #{mcpDesc},
+            is_required = #{isRequired},
+            http_path = #{httpPath},
+            http_location = #{httpLocation},
+            sort_order = #{sortOrder},
+            create_time = #{createTime},
+            update_time = #{updateTime}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据主键选择性更新。 -->
+    <update id="updateByIdSelective" parameterType="cn.zephyr.ai.infrastructure.dao.po.McpProtocolMappingPO">
+        UPDATE mcp_protocol_mapping
+        <set>
+            <if test="gatewayId != null">gateway_id = #{gatewayId},</if>
+            <if test="toolId != null">tool_id = #{toolId},</if>
+            <if test="mappingType != null">mapping_type = #{mappingType},</if>
+            <if test="parentPath != null">parent_path = #{parentPath},</if>
+            <if test="fieldName != null">field_name = #{fieldName},</if>
+            <if test="mcpPath != null">mcp_path = #{mcpPath},</if>
+            <if test="mcpType != null">mcp_type = #{mcpType},</if>
+            <if test="mcpDesc != null">mcp_desc = #{mcpDesc},</if>
+            <if test="isRequired != null">is_required = #{isRequired},</if>
+            <if test="httpPath != null">http_path = #{httpPath},</if>
+            <if test="httpLocation != null">http_location = #{httpLocation},</if>
+            <if test="sortOrder != null">sort_order = #{sortOrder},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据主键删除。 -->
+    <delete id="deleteById" parameterType="java.lang.Long">
+        DELETE FROM mcp_protocol_mapping WHERE id = #{id}
+    </delete>
+
+    <!-- 根据主键查询。 -->
+    <select id="selectById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT <include refid="BaseColumns"/>
+        FROM mcp_protocol_mapping
+        WHERE id = #{id}
+    </select>
+
+    <!-- 查询全部映射配置。 -->
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT <include refid="BaseColumns"/>
+        FROM mcp_protocol_mapping
+        ORDER BY id DESC
+    </select>
+
+</mapper>
