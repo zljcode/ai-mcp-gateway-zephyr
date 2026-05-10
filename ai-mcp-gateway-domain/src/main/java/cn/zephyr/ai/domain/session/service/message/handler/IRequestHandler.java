@@ -9,6 +9,6 @@ import cn.zephyr.ai.domain.session.model.valobj.McpSchemaVO;
  */
 public interface IRequestHandler {
 
-    McpSchemaVO.JSONRPCResponse handle(McpSchemaVO.JSONRPCRequest message);
+    McpSchemaVO.JSONRPCResponse handle(String gatewayId,McpSchemaVO.JSONRPCRequest message);
 
 }

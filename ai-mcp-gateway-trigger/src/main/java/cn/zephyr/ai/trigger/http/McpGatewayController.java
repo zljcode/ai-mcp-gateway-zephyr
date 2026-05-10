@@ -103,8 +103,8 @@ public class McpGatewayController implements IMcpGatewayService {
     @Override
     @PostMapping(value = "{gatewayId}/mcp/sse", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Mono<ResponseEntity<Void>> handleMessage(@PathVariable("gatewayId") String gatewayId,
-                                                       @RequestParam("sessionId") String sessionId,
-                                                       @RequestBody String messageBody) {
+                                                    @RequestParam("sessionId") String sessionId,
+                                                    @RequestBody String messageBody) {
         try {
             log.info("处理 MCP SSE 消息，gatewayId:{} sessionId:{} messageBody:{}", gatewayId, sessionId, messageBody);
 
@@ -119,7 +119,7 @@ public class McpGatewayController implements IMcpGatewayService {
             log.info("序列化消息：{}", jsonrpcMessage.jsonrpc());
 
             //暂时直接调用 domain, 后续调整
-            McpSchemaVO.JSONRPCResponse jsonrpcResponse = serviceMessageService.processHandlerMessage(jsonrpcMessage);
+            McpSchemaVO.JSONRPCResponse jsonrpcResponse = serviceMessageService.processHandlerMessage(gatewayId, jsonrpcMessage);
             if (null != jsonrpcResponse) {
                 String responseJson = objectMapper.writeValueAsString(jsonrpcResponse);
                 session.getSink().tryEmitNext(ServerSentEvent.<String>builder()

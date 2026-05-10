@@ -32,4 +32,6 @@ public interface IMcpGatewayDao {
     /** 查询全部记录。 */
     List<McpGatewayPO> selectAll();
 
+    McpGatewayPO queryMcpGatewayByGatewayId(String gatewayId);
+
 }

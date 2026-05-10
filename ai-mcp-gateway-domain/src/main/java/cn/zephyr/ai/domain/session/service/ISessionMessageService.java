@@ -11,6 +11,6 @@ import org.springframework.stereotype.Service;
 @Service
 public interface ISessionMessageService {
 
-    McpSchemaVO.JSONRPCResponse processHandlerMessage(McpSchemaVO.JSONRPCMessage message);
+    McpSchemaVO.JSONRPCResponse processHandlerMessage(String gatewayId,McpSchemaVO.JSONRPCMessage message);
 
 }
