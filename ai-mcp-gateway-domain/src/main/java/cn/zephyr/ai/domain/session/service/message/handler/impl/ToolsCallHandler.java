@@ -1,8 +1,13 @@
 package cn.zephyr.ai.domain.session.service.message.handler.impl;
 
+import cn.zephyr.ai.domain.session.adapter.port.ISessionPort;
+import cn.zephyr.ai.domain.session.adapter.repository.ISessionRepository;
 import cn.zephyr.ai.domain.session.model.valobj.McpSchemaVO;
+import cn.zephyr.ai.domain.session.model.valobj.gateway.McpGatewayProtocolConfigVO;
 import cn.zephyr.ai.domain.session.service.message.handler.IRequestHandler;
 import cn.zephyr.ai.types.enums.McpErrorCodes;
+import com.fasterxml.jackson.core.type.TypeReference;
+import jakarta.annotation.Resource;
 import jakarta.websocket.MessageHandler;
 import org.springframework.stereotype.Service;
 
@@ -16,42 +21,43 @@ import java.util.Map;
  */
 @Service("toolsCallHandler")
 public class ToolsCallHandler implements IRequestHandler {
+    @Resource
+    private ISessionRepository sessionRepository;
+
+    @Resource
+    private ISessionPort port;
+
     @Override
-    public McpSchemaVO.JSONRPCResponse handle(String gatewayId,McpSchemaVO.JSONRPCRequest message) {
-        Object id = message.id();
-        Object params = message.params();
+    public McpSchemaVO.JSONRPCResponse handle(String gatewayId, McpSchemaVO.JSONRPCRequest message) {
 
-        if (!(params instanceof Map)) {
-            new McpSchemaVO.JSONRPCResponse.JSONRPCError(McpErrorCodes.INVALID_PARAMS, "Invalid arguments format", null);
+        try {
+            McpGatewayProtocolConfigVO mcpGatewayProtocolConfigVO = sessionRepository.queryMcpGatewayProtocolConfig(gatewayId);
 
-            return new McpSchemaVO.JSONRPCResponse("2.0",
-                    message.id(), null,
-                    new McpSchemaVO.JSONRPCResponse.JSONRPCError(McpErrorCodes.INVALID_PARAMS, "无效参数 - 无效的方法参数", null));
-        }
+            //1、转换参数
+            McpSchemaVO.CallToolRequest callToolRequest = McpSchemaVO.unmarshalFrom(message.params(), new TypeReference<>() {
+            });
 
-        Map<String, Object> paramsMap = (Map<String, Object>) params;
-        String toolName = (String) paramsMap.get("name");
-        Object argumentsObj = paramsMap.get("arguments");
+            Object arumentsObj = callToolRequest.arguments();
 
-        Map<String, Object> arguments = (Map<String, Object>) argumentsObj;
+            // todo 暂时工具名称还没有使用，后续会调整
+            String name = callToolRequest.name();
 
-        if ("toUpperCase".equals(toolName)) {
-            String word = arguments.get("word").toString();
+            //2、调用接口
+            Object result = port.toolCall(mcpGatewayProtocolConfigVO.getHttpConfig(), arumentsObj);
 
-            return new McpSchemaVO.JSONRPCResponse("2.0",
-                    message.id(), Map.of(
+            return new McpSchemaVO.JSONRPCResponse(McpSchemaVO.JSONRPC_VERSION, message.id(), Map.of(
                     "content", new Object[]{
                             Map.of(
                                     "type", "text",
-                                    "text", word.toUpperCase()
-                            )
-                    }
+                                    "text", result
+                            ),
+                    },
+                    "isError", "false"
             ), null);
+        } catch (Exception e) {
+            return new McpSchemaVO.JSONRPCResponse(McpSchemaVO.JSONRPC_VERSION, message.id(), null,
+                    new McpSchemaVO.JSONRPCResponse.JSONRPCError(McpErrorCodes.INVALID_PARAMS, e.getMessage(), null));
         }
-
-        return new McpSchemaVO.JSONRPCResponse("2.0",
-                message.id(),
-                null,
-                new McpSchemaVO.JSONRPCResponse.JSONRPCError(McpErrorCodes.METHOD_NOT_FOUND, "方法未找到 - 方法不存在或不可用", null));
     }
+
 }
