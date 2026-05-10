@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * MCP 网关配置表对应的持久化对象。
@@ -16,23 +17,41 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class McpGatewayPO {
 
-    /** 主键 ID。 */
+    /**
+     * 主键ID
+     */
     private Long id;
-    /** 网关唯一标识。 */
+    /**
+     * 网关唯一标识
+     */
     private String gatewayId;
-    /** 网关名称。 */
+    /**
+     * 网关名称
+     */
     private String gatewayName;
-    /** 网关描述。 */
+    /**
+     * 网关描述
+     */
     private String gatewayDesc;
     /**
      * 协议版本
      */
     private String version;
-    /** 状态：0-禁用，1-启用。 */
+    /**
+     * 状态：0-禁用，1-启用
+     */
     private Integer status;
-    /** 创建时间。 */
-    private LocalDateTime createTime;
-    /** 更新时间。 */
-    private LocalDateTime updateTime;
+    /**
+     * 状态：0-不校验，1-强校验
+     */
+    private Integer auth;
+    /**
+     * 创建时间
+     */
+    private Date createTime;
+    /**
+     * 更新时间
+     */
+    private Date updateTime;
 
 }
