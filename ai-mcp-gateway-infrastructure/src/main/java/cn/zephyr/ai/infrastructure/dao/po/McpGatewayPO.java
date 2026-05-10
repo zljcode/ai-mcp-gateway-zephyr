@@ -24,6 +24,10 @@ public class McpGatewayPO {
     private String gatewayName;
     /** 网关描述。 */
     private String gatewayDesc;
+    /**
+     * 协议版本
+     */
+    private String version;
     /** 状态：0-禁用，1-启用。 */
     private Integer status;
     /** 创建时间。 */

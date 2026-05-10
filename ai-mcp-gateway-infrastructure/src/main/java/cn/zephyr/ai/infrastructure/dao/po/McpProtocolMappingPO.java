@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * MCP 映射配置表对应的持久化对象。
@@ -16,35 +17,52 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class McpProtocolMappingPO {
 
-    /** 主键 ID。 */
+    /**
+     * 主键ID
+     */
     private Long id;
-    /** 所属网关 ID。 */
-    private String gatewayId;
-    /** 所属工具 ID。 */
-    private Long toolId;
-    /** 映射类型：request / response。 */
+    /**
+     * 协议ID
+     */
+    private Long protocolId;
+    /**
+     * 映射类型：request-请求参数映射，response-响应数据映射
+     */
     private String mappingType;
-    /** 父级路径，用于构建嵌套结构。 */
+    /**
+     * 父级路径（如：xxxRequest01，用于构建嵌套结构，根节点为NULL）
+     */
     private String parentPath;
-    /** 字段名称。 */
+    /**
+     * 字段名称（如：city、company、name）
+     */
     private String fieldName;
-    /** MCP 完整路径。 */
+    /**
+     * MCP完整路径（如：xxxRequest01.city、xxxRequest01.company.name）
+     */
     private String mcpPath;
-    /** MCP 数据类型。 */
+    /**
+     * MCP数据类型：string/number/boolean/object/array
+     */
     private String mcpType;
-    /** MCP 字段描述。 */
+    /**
+     * MCP字段描述
+     */
     private String mcpDesc;
-    /** 是否必填：0-否，1-是。 */
+    /**
+     * 是否必填：0-否，1-是（用于生成required数组）
+     */
     private Integer isRequired;
-    /** HTTP 路径。 */
-    private String httpPath;
-    /** HTTP 位置：body/query/path/header。 */
-    private String httpLocation;
-    /** 排序顺序。 */
+    /**
+     * 排序顺序（同级字段排序）
+     */
     private Integer sortOrder;
-    /** 创建时间。 */
-    private LocalDateTime createTime;
-    /** 更新时间。 */
-    private LocalDateTime updateTime;
-
+    /**
+     * 创建时间
+     */
+    private Date createTime;
+    /**
+     * 更新时间
+     */
+    private Date updateTime;
 }
