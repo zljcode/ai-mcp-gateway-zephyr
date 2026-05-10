@@ -11,28 +11,16 @@ import java.util.List;
 @Mapper
 public interface IMcpProtocolMappingDao {
 
-    /** 新增一条记录。 */
-    int insert(McpProtocolMappingPO mcpProtocolMappingPO);
+    int insert(McpProtocolMappingPO po);
 
-    /** 选择性新增一条记录。 */
-    int insertSelective(McpProtocolMappingPO mcpProtocolMappingPO);
-
-    /** 根据主键完整更新。 */
-    int updateById(McpProtocolMappingPO mcpProtocolMappingPO);
-
-    /** 根据主键选择性更新。 */
-    int updateByIdSelective(McpProtocolMappingPO mcpProtocolMappingPO);
-
-    /** 根据主键删除。 */
     int deleteById(Long id);
 
-    /** 根据主键查询。 */
-    McpProtocolMappingPO selectById(Long id);
+    int updateById(McpProtocolMappingPO po);
 
-    /** 查询全部记录。 */
-    List<McpProtocolMappingPO> selectAll();
+    McpProtocolMappingPO queryById(Long id);
 
-    List<McpProtocolMappingPO> queryMcpGatewayToolConfigList(String gatewayId);
+    List<McpProtocolMappingPO> queryAll();
 
+    List<McpProtocolMappingPO> queryMcpGatewayToolConfigListByProtocolId(Long protocolId);
 
 }
