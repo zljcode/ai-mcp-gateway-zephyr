@@ -14,12 +14,16 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class McpProtocolRegistryPO {
+public class McpProtocolHttpPO {
 
     /** 主键 ID。 */
     private Long id;
     /** 所属网关 ID。 */
     private String gatewayId;
+    /**
+     * 所属网关ID
+     */
+    private Long protocolId;
     /** 工具 ID。 */
     private Long toolId;
     /** MCP 工具名称。 */
