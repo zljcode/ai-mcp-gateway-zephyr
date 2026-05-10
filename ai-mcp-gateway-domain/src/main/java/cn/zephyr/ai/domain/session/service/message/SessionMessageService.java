@@ -1,5 +1,6 @@
 package cn.zephyr.ai.domain.session.service.message;
 
+import cn.zephyr.ai.domain.session.model.entity.HandleMessageCommandEntity;
 import cn.zephyr.ai.domain.session.model.valobj.McpSchemaVO;
 import cn.zephyr.ai.domain.session.model.valobj.enums.SessionMessageHandlerMethodEnum;
 import cn.zephyr.ai.domain.session.service.ISessionMessageService;
@@ -27,7 +28,7 @@ public class SessionMessageService implements ISessionMessageService {
     private Map<String, IRequestHandler> requestHandlerMap;
 
     @Override
-    public McpSchemaVO.JSONRPCResponse processHandlerMessage(String gatewayId,McpSchemaVO.JSONRPCMessage message) {
+    public McpSchemaVO.JSONRPCResponse processHandlerMessage(String gatewayId, McpSchemaVO.JSONRPCMessage message) {
 
         if (message instanceof McpSchemaVO.JSONRPCResponse response) {
             log.info("收到结果消息");
@@ -50,12 +51,17 @@ public class SessionMessageService implements ISessionMessageService {
             }
 
             //使用枚举策略模式处理请求
-            return requestHandler.handle(gatewayId,request);
+            return requestHandler.handle(gatewayId, request);
         }
 
         if (message instanceof McpSchemaVO.JSONRPCNotification notification) {
             log.info("收到即将处理的通知 {} {}", notification.method(), JSON.toJSONString(notification.params()));
         }
         return null;
+    }
+
+    @Override
+    public McpSchemaVO.JSONRPCResponse processHandlerMessage(HandleMessageCommandEntity commandEntity) {
+        return processHandlerMessage(commandEntity.getGatewayId(), commandEntity.getJsonrpcMessage());
     }
 }

@@ -1,7 +1,9 @@
 package cn.zephyr.ai.trigger.http;
 
 import cn.zephyr.ai.api.IMcpGatewayService;
+import cn.zephyr.ai.cases.mcp.IMcpMessageService;
 import cn.zephyr.ai.cases.mcp.IMcpSessionService;
+import cn.zephyr.ai.domain.session.model.entity.HandleMessageCommandEntity;
 import cn.zephyr.ai.domain.session.model.valobj.McpSchemaVO;
 import cn.zephyr.ai.domain.session.model.valobj.SessionConfigVO;
 import cn.zephyr.ai.domain.session.service.ISessionMessageService;
@@ -34,14 +36,9 @@ public class McpGatewayController implements IMcpGatewayService {
 
     @Resource
     private IMcpSessionService mcpSessionService;
-    // todo 暂时调用 domain 测试，后续调用 case 编排
-    @Resource
-    private ISessionMessageService serviceMessageService;
-    @Autowired
-    private SessionManagementService sessionManagementService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    @Resource
+    private IMcpMessageService mcpMessageService;
 
     /*
         如果你的启动后，访问不到服务，那么可以在 System.out.println("xxxx"); 一行打断点，
@@ -106,26 +103,16 @@ public class McpGatewayController implements IMcpGatewayService {
         try {
             log.info("处理 MCP SSE 消息，gatewayId:{} sessionId:{} messageBody:{}", gatewayId, sessionId, messageBody);
 
-            SessionConfigVO session = sessionManagementService.getSession(sessionId);
-            if (null == session) {
-                log.warn("会话不存在或已过期，gatewayId:{} sessionId:{}", gatewayId, sessionId);
-                return Mono.just(ResponseEntity.notFound().build());
+            if(StringUtils.isBlank(gatewayId)|| StringUtils.isBlank(sessionId)) {
+                log.info("非法参数，gatewayId、sessionId is null");
+                throw new AppException(ResponseCode.ILLEGAL_PARAMETER.getCode(),ResponseCode.ILLEGAL_PARAMETER.getInfo());
             }
 
-            McpSchemaVO.JSONRPCMessage jsonrpcMessage = McpSchemaVO.deserializeJsonRpcMessage(messageBody);
-            log.info("序列化消息:{}", jsonrpcMessage.jsonrpc());
+            HandleMessageCommandEntity commandEntity = new HandleMessageCommandEntity(gatewayId, sessionId, messageBody);
+            ResponseEntity<Void> responseEntity = mcpMessageService.handleMessage(commandEntity);
 
-            // 暂时直接调用 domain，后续调整
-            McpSchemaVO.JSONRPCResponse jsonrpcResponse = serviceMessageService.processHandlerMessage(gatewayId, jsonrpcMessage);
-            if (null != jsonrpcResponse) {
-                String responseJson = objectMapper.writeValueAsString(jsonrpcResponse);
-                session.getSink().tryEmitNext(ServerSentEvent.<String>builder()
-                        .event("message")
-                        .data(responseJson)
-                        .build());
-            }
+            return Mono.justOrEmpty(responseEntity);
 
-            return Mono.just(ResponseEntity.accepted().build());
         } catch (Exception e) {
             log.error("处理 MCP SSE 消息失败，gatewayId:{} sessionId:{} messageBody:{}", gatewayId, sessionId, messageBody, e);
             return Mono.just(ResponseEntity.internalServerError().build());
