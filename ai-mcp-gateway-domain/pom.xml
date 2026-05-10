@@ -47,6 +47,12 @@
             <groupId>cn.zephyr.ai</groupId>
             <artifactId>ai-mcp-gateway-types</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.modelcontextprotocol.sdk</groupId>
+            <artifactId>mcp-core</artifactId>
+            <version>0.18.2</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>
