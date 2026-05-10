@@ -1,8 +1,8 @@
 package cn.zephyr.ai.domain.session.adapter.port;
 
+import cn.zephyr.ai.domain.session.model.valobj.gateway.McpToolProtocolConfigVO;
+
 import java.io.IOException;
-import cn.zephyr.ai.domain.session.model.valobj.gateway.McpGatewayProtocolConfigVO;
-import org.springframework.stereotype.Service;
 
 /**
  * @author Zhulejun @Zephyr
@@ -11,5 +11,6 @@ import org.springframework.stereotype.Service;
  */
 public interface ISessionPort {
 
-    Object toolCall(McpGatewayProtocolConfigVO.HTTPConfig httpConfig, Object params) throws IOException;
+    Object toolCall(McpToolProtocolConfigVO.HTTPConfig httpConfig, Object params) throws IOException;
+
 }

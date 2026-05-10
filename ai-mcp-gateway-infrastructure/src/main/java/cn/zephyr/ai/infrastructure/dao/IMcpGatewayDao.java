@@ -11,27 +11,17 @@ import java.util.List;
 @Mapper
 public interface IMcpGatewayDao {
 
-    /** 新增一条记录。 */
-    int insert(McpGatewayPO mcpGatewayPO);
+    int insert(McpGatewayPO po);
 
-    /** 选择性新增一条记录。 */
-    int insertSelective(McpGatewayPO mcpGatewayPO);
-
-    /** 根据主键完整更新。 */
-    int updateById(McpGatewayPO mcpGatewayPO);
-
-    /** 根据主键选择性更新。 */
-    int updateByIdSelective(McpGatewayPO mcpGatewayPO);
-
-    /** 根据主键删除。 */
     int deleteById(Long id);
 
-    /** 根据主键查询。 */
-    McpGatewayPO selectById(Long id);
+    int updateById(McpGatewayPO po);
 
-    /** 查询全部记录。 */
-    List<McpGatewayPO> selectAll();
+    McpGatewayPO queryById(Long id);
+
+    List<McpGatewayPO> queryAll();
 
     McpGatewayPO queryMcpGatewayByGatewayId(String gatewayId);
 
 }
+

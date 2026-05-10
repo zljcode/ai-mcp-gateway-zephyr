@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.time.LocalDateTime;
 
 /**
@@ -25,12 +26,12 @@ public class McpGatewayAuthPO {
     /** 速率限制（次/小时）。 */
     private Integer rateLimit;
     /** 过期时间。 */
-    private LocalDateTime expireTime;
+    private Date expireTime;
     /** 状态：0-禁用，1-启用。 */
     private Integer status;
     /** 创建时间。 */
-    private LocalDateTime createTime;
+    private Date createTime;
     /** 更新时间。 */
-    private LocalDateTime updateTime;
+    private Date updateTime;
 
 }

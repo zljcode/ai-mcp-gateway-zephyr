@@ -1,8 +1,10 @@
 package cn.zephyr.ai.test.gateway;
 
-import cn.zephyr.ai.infrastructure.dao.IMcpProtocolRegistryDao;
-import cn.zephyr.ai.infrastructure.dao.po.McpProtocolRegistryPO;
+import cn.zephyr.ai.infrastructure.dao.IMcpProtocolHttpDao;
+import cn.zephyr.ai.infrastructure.dao.po.McpProtocolHttpPO;
 import cn.zephyr.ai.infrastructure.gateway.GenericHttpGateway;
+import java.util.Map;
+
 import com.alibaba.fastjson.JSON;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -15,8 +17,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Map;
-
 @Slf4j
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -27,15 +27,15 @@ public class GenericHttpGatewayTest {
     private GenericHttpGateway gateway;
 
     @javax.annotation.Resource
-    private IMcpProtocolRegistryDao mcpProtocolRegistryDao;
+    private IMcpProtocolHttpDao mcpProtocolRegistryDao;
 
     @Test
     public void test_post() throws Exception {
-        McpProtocolRegistryPO mcpProtocolRegistryPO = mcpProtocolRegistryDao.queryById(1L);
+        McpProtocolHttpPO mcpProtocolHttpPO = mcpProtocolRegistryDao.queryById(1L);
 
-        String httpUrl = mcpProtocolRegistryPO.getHttpUrl();
-        String httpHeaders = mcpProtocolRegistryPO.getHttpHeaders();
-        Integer timeout = mcpProtocolRegistryPO.getTimeout();
+        String httpUrl = mcpProtocolHttpPO.getHttpUrl();
+        String httpHeaders = mcpProtocolHttpPO.getHttpHeaders();
+        Integer timeout = mcpProtocolHttpPO.getTimeout();
 
         // 1. 请求参数
         Map<String, Object> params = new java.util.HashMap<>();

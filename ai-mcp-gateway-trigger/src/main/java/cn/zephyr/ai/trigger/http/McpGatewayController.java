@@ -5,7 +5,7 @@ import cn.zephyr.ai.cases.mcp.IMcpSessionService;
 import cn.zephyr.ai.domain.session.model.valobj.McpSchemaVO;
 import cn.zephyr.ai.domain.session.model.valobj.SessionConfigVO;
 import cn.zephyr.ai.domain.session.service.ISessionMessageService;
-import cn.zephyr.ai.domain.session.service.impl.SessionManagementService;
+import cn.zephyr.ai.domain.session.service.management.SessionManagementService;
 import cn.zephyr.ai.types.enums.ResponseCode;
 import cn.zephyr.ai.types.exception.AppException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,8 +20,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Resource;
-import java.io.IOException;
-import java.util.Map;
 
 /**
  * @author Zhulejun @Zephyr
@@ -110,15 +108,14 @@ public class McpGatewayController implements IMcpGatewayService {
 
             SessionConfigVO session = sessionManagementService.getSession(sessionId);
             if (null == session) {
-                log.warn("会话不存在或已过期，gatewayId：{} sessionId:{}", gatewayId, sessionId);
+                log.warn("会话不存在或已过期，gatewayId:{} sessionId:{}", gatewayId, sessionId);
                 return Mono.just(ResponseEntity.notFound().build());
             }
 
-
             McpSchemaVO.JSONRPCMessage jsonrpcMessage = McpSchemaVO.deserializeJsonRpcMessage(messageBody);
-            log.info("序列化消息：{}", jsonrpcMessage.jsonrpc());
+            log.info("序列化消息:{}", jsonrpcMessage.jsonrpc());
 
-            //暂时直接调用 domain, 后续调整
+            // 暂时直接调用 domain，后续调整
             McpSchemaVO.JSONRPCResponse jsonrpcResponse = serviceMessageService.processHandlerMessage(gatewayId, jsonrpcMessage);
             if (null != jsonrpcResponse) {
                 String responseJson = objectMapper.writeValueAsString(jsonrpcResponse);
@@ -129,9 +126,8 @@ public class McpGatewayController implements IMcpGatewayService {
             }
 
             return Mono.just(ResponseEntity.accepted().build());
-
-        } catch (IOException e) {
-            log.info("处理 MCP SSE 消息失败，gatewayId:{} sessionId:{} messageBody:{}", gatewayId, sessionId, messageBody, e);
+        } catch (Exception e) {
+            log.error("处理 MCP SSE 消息失败，gatewayId:{} sessionId:{} messageBody:{}", gatewayId, sessionId, messageBody, e);
             return Mono.just(ResponseEntity.internalServerError().build());
         }
     }
