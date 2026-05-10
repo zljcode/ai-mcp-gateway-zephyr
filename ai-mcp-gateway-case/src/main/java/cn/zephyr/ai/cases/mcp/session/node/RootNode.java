@@ -19,7 +19,7 @@ import javax.annotation.Resource;
 @Service
 public class RootNode extends AbstractMcpMessageSupport {
 
-    @Resource
+    @Resource(name = "mcpSessionVerifyNode")
     private VerifyNode verifyNode;
 
     @Override

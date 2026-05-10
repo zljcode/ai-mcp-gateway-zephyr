@@ -15,7 +15,7 @@ import javax.annotation.Resource;
  * @create 2026/5/9 上午11:23
  */
 @Service
-public class McpMessageService implements IMcpSessionService {
+public class McpSessionService implements IMcpSessionService {
 
     @Resource
     private DefalutMcpSessionFactory defalutMcpSessionFactory;

@@ -1,7 +1,6 @@
 package cn.zephyr.ai.cases.mcp;
 
 import cn.zephyr.ai.domain.session.model.entity.HandleMessageCommandEntity;
-import org.apache.logging.log4j.message.Message;
 import org.springframework.http.ResponseEntity;
 
 import java.util.logging.Handler;

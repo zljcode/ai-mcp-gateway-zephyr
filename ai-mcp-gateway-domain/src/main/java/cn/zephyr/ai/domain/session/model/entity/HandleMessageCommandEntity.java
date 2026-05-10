@@ -1,6 +1,7 @@
 package cn.zephyr.ai.domain.session.model.entity;
 
 import cn.zephyr.ai.domain.session.model.valobj.McpSchemaVO;
+import lombok.Data;
 
 import java.io.IOException;
 
@@ -9,6 +10,7 @@ import java.io.IOException;
  * @description 处理消息命令实体对象
  * @create 2026/5/9 下午2:45
  */
+@Data
 public class HandleMessageCommandEntity {
     private String gatewayId;
     private String sessionId;
