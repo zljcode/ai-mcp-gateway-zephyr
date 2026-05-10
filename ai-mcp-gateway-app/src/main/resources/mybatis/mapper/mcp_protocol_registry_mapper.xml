@@ -160,6 +160,11 @@
         FROM mcp_protocol_registry
         WHERE gateway_id = #{gateway_id}
     </select>
+    <select id="queryById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT id, gateway_id, tool_id, tool_name, tool_type, tool_description, tool_version, http_url, http_method, http_headers, timeout, retry_times, status, create_time, update_time
+        FROM mcp_protocol_registry
+        WHERE id = #{id}
+    </select>
 
 
 </mapper>

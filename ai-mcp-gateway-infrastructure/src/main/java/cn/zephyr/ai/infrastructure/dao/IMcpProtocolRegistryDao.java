@@ -53,4 +53,5 @@ public interface IMcpProtocolRegistryDao {
     McpProtocolRegistryPO queryMcpProtocolRegistryByGatewayId(String gatewayId);
 
 
+    McpProtocolRegistryPO queryById(long l);
 }
