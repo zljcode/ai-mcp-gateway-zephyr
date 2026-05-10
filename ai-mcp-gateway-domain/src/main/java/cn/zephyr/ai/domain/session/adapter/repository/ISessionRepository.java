@@ -1,6 +1,9 @@
 package cn.zephyr.ai.domain.session.adapter.repository;
 
 import cn.zephyr.ai.domain.session.model.valobj.gateway.McpGatewayConfigVO;
+import cn.zephyr.ai.domain.session.model.valobj.gateway.McpGatewayToolConfigVO;
+
+import java.util.List;
 
 /**
  * @author Zhulejun @Zephyr
@@ -14,5 +17,12 @@ public interface ISessionRepository {
      * @param gatewayId
      * @return
      */
-    public McpGatewayConfigVO queryMcpGatewayConfigByGatewayId(String gatewayId);
+    McpGatewayConfigVO queryMcpGatewayConfigByGatewayId(String gatewayId);
+
+    /**
+     * 查找网关工具配置
+     * @param gatewayId
+     * @return
+     */
+    List<McpGatewayToolConfigVO> queryMcpGatewayToolConfigListByGatewayId(String gatewayId);
 }

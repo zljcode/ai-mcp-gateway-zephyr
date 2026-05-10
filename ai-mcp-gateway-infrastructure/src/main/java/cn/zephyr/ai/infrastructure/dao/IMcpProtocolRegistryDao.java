@@ -1,5 +1,6 @@
 package cn.zephyr.ai.infrastructure.dao;
 
+import cn.zephyr.ai.infrastructure.dao.po.McpProtocolMappingPO;
 import cn.zephyr.ai.infrastructure.dao.po.McpProtocolRegistryPO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -50,5 +51,6 @@ public interface IMcpProtocolRegistryDao {
      * 查询协议注册（1:1 -> gatewayId:toolId）
      */
     McpProtocolRegistryPO queryMcpProtocolRegistryByGatewayId(String gatewayId);
+
 
 }
