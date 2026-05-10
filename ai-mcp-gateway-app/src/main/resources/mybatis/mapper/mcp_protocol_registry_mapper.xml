@@ -9,6 +9,7 @@
         <result column="tool_id" property="toolId"/>
         <result column="tool_name" property="toolName"/>
         <result column="tool_type" property="toolType"/>
+        <result column="tool_version" property="toolVersion"/>
         <result column="tool_description" property="toolDescription"/>
         <result column="http_url" property="httpUrl"/>
         <result column="http_method" property="httpMethod"/>
@@ -22,29 +23,31 @@
 
     <!-- 基础列清单，供查询复用。 -->
     <sql id="BaseColumns">
-        id, gateway_id, tool_id, tool_name, tool_type, tool_description, http_url, http_method,
+        id, gateway_id, tool_id, tool_name, tool_type, tool_version, tool_description, http_url, http_method,
         http_headers, timeout, retry_times, status, create_time, update_time
     </sql>
 
     <!-- 新增工具注册记录。 -->
-    <insert id="insert" parameterType="cn.zephyr.ai.infrastructure.dao.po.McpProtocolRegistryPO" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO mcp_protocol_registry (
-            gateway_id, tool_id, tool_name, tool_type, tool_description, http_url, http_method,
-            http_headers, timeout, retry_times, status, create_time, update_time
-        ) VALUES (
-            #{gatewayId}, #{toolId}, #{toolName}, #{toolType}, #{toolDescription}, #{httpUrl}, #{httpMethod},
-            #{httpHeaders}, #{timeout}, #{retryTimes}, #{status}, #{createTime}, #{updateTime}
-        )
+    <insert id="insert" parameterType="cn.zephyr.ai.infrastructure.dao.po.McpProtocolRegistryPO" useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO mcp_protocol_registry (gateway_id, tool_id, tool_name, tool_type, tool_version, tool_description,
+                                           http_url, http_method,
+                                           http_headers, timeout, retry_times, status, create_time, update_time)
+        VALUES (#{gatewayId}, #{toolId}, #{toolName}, #{toolType}, #{toolVersion}, #{toolDescription}, #{httpUrl},
+                #{httpMethod},
+                #{httpHeaders}, #{timeout}, #{retryTimes}, #{status}, #{createTime}, #{updateTime})
     </insert>
 
     <!-- 选择性新增工具注册记录。 -->
-    <insert id="insertSelective" parameterType="cn.zephyr.ai.infrastructure.dao.po.McpProtocolRegistryPO" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertSelective" parameterType="cn.zephyr.ai.infrastructure.dao.po.McpProtocolRegistryPO"
+            useGeneratedKeys="true" keyProperty="id">
         INSERT INTO mcp_protocol_registry
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="gatewayId != null">gateway_id,</if>
             <if test="toolId != null">tool_id,</if>
             <if test="toolName != null">tool_name,</if>
             <if test="toolType != null">tool_type,</if>
+            <if test="toolVersion != null">tool_version,</if>
             <if test="toolDescription != null">tool_description,</if>
             <if test="httpUrl != null">http_url,</if>
             <if test="httpMethod != null">http_method,</if>
@@ -60,6 +63,7 @@
             <if test="toolId != null">#{toolId},</if>
             <if test="toolName != null">#{toolName},</if>
             <if test="toolType != null">#{toolType},</if>
+            <if test="toolVersion != null">#{toolVersion},</if>
             <if test="toolDescription != null">#{toolDescription},</if>
             <if test="httpUrl != null">#{httpUrl},</if>
             <if test="httpMethod != null">#{httpMethod},</if>
@@ -75,19 +79,20 @@
     <!-- 根据主键完整更新。 -->
     <update id="updateById" parameterType="cn.zephyr.ai.infrastructure.dao.po.McpProtocolRegistryPO">
         UPDATE mcp_protocol_registry
-        SET gateway_id = #{gatewayId},
-            tool_id = #{toolId},
-            tool_name = #{toolName},
-            tool_type = #{toolType},
+        SET gateway_id       = #{gatewayId},
+            tool_id          = #{toolId},
+            tool_name        = #{toolName},
+            tool_type        = #{toolType},
+            tool_version     = #{toolVersion},
             tool_description = #{toolDescription},
-            http_url = #{httpUrl},
-            http_method = #{httpMethod},
-            http_headers = #{httpHeaders},
-            timeout = #{timeout},
-            retry_times = #{retryTimes},
-            status = #{status},
-            create_time = #{createTime},
-            update_time = #{updateTime}
+            http_url         = #{httpUrl},
+            http_method      = #{httpMethod},
+            http_headers     = #{httpHeaders},
+            timeout          = #{timeout},
+            retry_times      = #{retryTimes},
+            status           = #{status},
+            create_time      = #{createTime},
+            update_time      = #{updateTime}
         WHERE id = #{id}
     </update>
 
@@ -99,6 +104,7 @@
             <if test="toolId != null">tool_id = #{toolId},</if>
             <if test="toolName != null">tool_name = #{toolName},</if>
             <if test="toolType != null">tool_type = #{toolType},</if>
+            <if test="toolVersion != null">tool_version = #{toolVersion},</if>
             <if test="toolDescription != null">tool_description = #{toolDescription},</if>
             <if test="httpUrl != null">http_url = #{httpUrl},</if>
             <if test="httpMethod != null">http_method = #{httpMethod},</if>
@@ -114,21 +120,45 @@
 
     <!-- 根据主键删除。 -->
     <delete id="deleteById" parameterType="java.lang.Long">
-        DELETE FROM mcp_protocol_registry WHERE id = #{id}
+        DELETE
+        FROM mcp_protocol_registry
+        WHERE id = #{id}
     </delete>
 
     <!-- 根据主键查询。 -->
     <select id="selectById" parameterType="java.lang.Long" resultMap="BaseResultMap">
-        SELECT <include refid="BaseColumns"/>
+        SELECT
+        <include refid="BaseColumns"/>
         FROM mcp_protocol_registry
         WHERE id = #{id}
     </select>
 
     <!-- 查询全部工具注册记录。 -->
     <select id="selectAll" resultMap="BaseResultMap">
-        SELECT <include refid="BaseColumns"/>
+        SELECT
+        <include refid="BaseColumns"/>
         FROM mcp_protocol_registry
         ORDER BY id DESC
+    </select>
+
+    <select id="queryMcpProtocolRegistryByGatewayId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT id,
+               gateway_id,
+               tool_id,
+               tool_name,
+               tool_type,
+               tool_description,
+               tool_version,
+               http_url,
+               http_method,
+               http_headers,
+               timeout,
+               retry_times,
+               status,
+               create_time,
+               update_time
+        FROM mcp_protocol_registry
+        WHERE gateway_id = #{gateway_id}
     </select>
 
 </mapper>

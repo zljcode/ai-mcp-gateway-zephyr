@@ -9,13 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import lombok.extern.slf4j.Slf4j;
 
 /**
- * @author Zhulejun @Zephyr
- * @description MCP格式 VO对象
  * MCP 架构值对象
  * <p>
  * public：访问修饰符，表示该接口和 record 是公开的，任何地方都可以访问。
@@ -25,10 +21,13 @@ import lombok.extern.slf4j.Slf4j;
  * implements：表示实现接口。
  * <p>
  * Jackson 注解用于控制 JSON 序列化和反序列化行为。
- * @create 2026/5/9 下午2:51
+ *
+ * @author xiaofuge bugstack.cn @小傅哥
+ * 2025/12/20 09:07
  */
 @Slf4j
 public final class McpSchemaVO {
+
     public static final String LATEST_PROTOCOL_VERSION = "2024-11-05";
 
     public static final String JSONRPC_VERSION = "2.0";
@@ -56,7 +55,7 @@ public final class McpSchemaVO {
         throw new IllegalArgumentException("Cannot deserialize JSONRPCMessage: " + jsonText);
     }
 
-    public static <T> T unmarshalFrom(Object data, TypeReference<T> typeRef) {
+    public static  <T> T unmarshalFrom(Object data, TypeReference<T> typeRef) {
         return objectMapper.convertValue(data, typeRef);
     }
 
@@ -94,8 +93,6 @@ public final class McpSchemaVO {
             @JsonProperty("params") Object params) implements JSONRPCMessage {
     }
 
-
-
     /**
      * 响应对象
      *
@@ -122,7 +119,7 @@ public final class McpSchemaVO {
     }
 
     public sealed interface Request
-            permits InitializeRequest, CallToolRequest {
+            permits InitializeRequest {
 
     }
 
@@ -302,63 +299,4 @@ public final class McpSchemaVO {
                                  @JsonProperty("version") String version) {
     } // @formatter:on
 
-    @JsonInclude(JsonInclude.Include.NON_ABSENT)
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public record ListToolsResult( // @formatter:off
-                                   @JsonProperty("tools") List<Tool> tools,
-                                   @JsonProperty("nextCursor") String nextCursor) {
-    }// @formatter:on
-
-    @JsonInclude(JsonInclude.Include.NON_ABSENT)
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public record Tool( // @formatter:off
-                        @JsonProperty("name") String name,
-                        @JsonProperty("description") String description,
-                        @JsonProperty("inputSchema") JsonSchema inputSchema) {
-
-        public Tool(String name, String description, String schema) {
-            this(name, description, parseSchema(schema));
-        }
-
-    } // @formatter:on
-
-
-    @JsonInclude(JsonInclude.Include.NON_ABSENT)
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public record JsonSchema( // @formatter:off
-                              @JsonProperty("type") String type,
-                              @JsonProperty("properties") Map<String, Object> properties,
-                              @JsonProperty("required") List<String> required,
-                              @JsonProperty("additionalProperties") Boolean additionalProperties,
-                              @JsonProperty("$defs") Map<String, Object> defs,
-                              @JsonProperty("definitions") Map<String, Object> definitions) {
-    } // @formatter:on
-
-    private static JsonSchema parseSchema(String schema) {
-        try {
-            return objectMapper.readValue(schema, JsonSchema.class);
-        } catch (IOException e) {
-            throw new IllegalArgumentException("Invalid schema: " + schema, e);
-        }
-    }
-
-    @JsonInclude(JsonInclude.Include.NON_ABSENT)
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public record CallToolRequest(// @formatter:off
-                                  @JsonProperty("name") String name,
-                                  @JsonProperty("arguments") Map<String, Object> arguments) implements Request {
-
-        public CallToolRequest(String name, String jsonArguments) {
-            this(name, parseJsonArguments(jsonArguments));
-        }
-
-        private static Map<String, Object> parseJsonArguments(String jsonArguments) {
-            try {
-                return objectMapper.readValue(jsonArguments, MAP_TYPE_REF);
-            }
-            catch (IOException e) {
-                throw new IllegalArgumentException("Invalid arguments: " + jsonArguments, e);
-            }
-        }
-    }// @formatter:off
 }
