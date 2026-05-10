@@ -20,7 +20,7 @@ spring:
   datasource:
     username: root
     password: REDACTED_DB_PASSWORD
-    url: ${DB_URL:jdbc:mysql://127.0.0.1:3306/your_database?useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&serverTimezone=UTC&useSSL=true}
+    url: jdbc:mysql://127.0.0.1:13306/ai_mcp_gateway?useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&serverTimezone=UTC&useSSL=true}
     driver-class-name: com.mysql.cj.jdbc.Driver
   hikari:
     pool-name: Retail_HikariCP

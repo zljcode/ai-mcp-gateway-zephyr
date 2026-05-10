@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.zephyr.ai.infrastructure.dao.IMcpGatewayAuthDao">
+
+    <!-- 基础结果映射。 -->
+    <resultMap id="BaseResultMap" type="cn.zephyr.ai.infrastructure.dao.po.McpGatewayAuthPO">
+        <id column="id" property="id"/>
+        <result column="gateway_id" property="gatewayId"/>
+        <result column="api_key" property="apiKey"/>
+        <result column="rate_limit" property="rateLimit"/>
+        <result column="expire_time" property="expireTime"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 基础列清单，供查询复用。 -->
+    <sql id="BaseColumns">
+        id, gateway_id, api_key, rate_limit, expire_time, status, create_time, update_time
+    </sql>
+
+    <!-- 新增权限配置。 -->
+    <insert id="insert" parameterType="cn.zephyr.ai.infrastructure.dao.po.McpGatewayAuthPO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO mcp_gateway_auth (gateway_id, api_key, rate_limit, expire_time, status, create_time, update_time)
+        VALUES (#{gatewayId}, #{apiKey}, #{rateLimit}, #{expireTime}, #{status}, #{createTime}, #{updateTime})
+    </insert>
+
+    <!-- 选择性新增权限配置。 -->
+    <insert id="insertSelective" parameterType="cn.zephyr.ai.infrastructure.dao.po.McpGatewayAuthPO" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO mcp_gateway_auth
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="gatewayId != null">gateway_id,</if>
+            <if test="apiKey != null">api_key,</if>
+            <if test="rateLimit != null">rate_limit,</if>
+            <if test="expireTime != null">expire_time,</if>
+            <if test="status != null">status,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="gatewayId != null">#{gatewayId},</if>
+            <if test="apiKey != null">#{apiKey},</if>
+            <if test="rateLimit != null">#{rateLimit},</if>
+            <if test="expireTime != null">#{expireTime},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <!-- 根据主键完整更新。 -->
+    <update id="updateById" parameterType="cn.zephyr.ai.infrastructure.dao.po.McpGatewayAuthPO">
+        UPDATE mcp_gateway_auth
+        SET gateway_id = #{gatewayId},
+            api_key = #{apiKey},
+            rate_limit = #{rateLimit},
+            expire_time = #{expireTime},
+            status = #{status},
+            create_time = #{createTime},
+            update_time = #{updateTime}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据主键选择性更新。 -->
+    <update id="updateByIdSelective" parameterType="cn.zephyr.ai.infrastructure.dao.po.McpGatewayAuthPO">
+        UPDATE mcp_gateway_auth
+        <set>
+            <if test="gatewayId != null">gateway_id = #{gatewayId},</if>
+            <if test="apiKey != null">api_key = #{apiKey},</if>
+            <if test="rateLimit != null">rate_limit = #{rateLimit},</if>
+            <if test="expireTime != null">expire_time = #{expireTime},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据主键删除。 -->
+    <delete id="deleteById" parameterType="java.lang.Long">
+        DELETE FROM mcp_gateway_auth WHERE id = #{id}
+    </delete>
+
+    <!-- 根据主键查询。 -->
+    <select id="selectById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT <include refid="BaseColumns"/>
+        FROM mcp_gateway_auth
+        WHERE id = #{id}
+    </select>
+
+    <!-- 查询全部权限配置。 -->
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT <include refid="BaseColumns"/>
+        FROM mcp_gateway_auth
+        ORDER BY id DESC
+    </select>
+
+</mapper>
