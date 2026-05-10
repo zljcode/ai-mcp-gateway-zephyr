@@ -26,6 +26,8 @@ public class McpProtocolRegistryPO {
     private String toolName;
     /** 工具类型：function / resource。 */
     private String toolType;
+    /** 工具版本。 */
+    private String toolVersion;
     /** 工具描述。 */
     private String toolDescription;
     /** HTTP 接口地址。 */
