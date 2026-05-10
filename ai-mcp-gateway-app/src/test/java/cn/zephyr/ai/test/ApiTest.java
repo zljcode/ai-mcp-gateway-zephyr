@@ -29,8 +29,6 @@ public class ApiTest {
         ChatClient chatClient = chatClientBuilder.defaultOptions(
                         OpenAiChatOptions.builder()
                                 .model("deepseek-chat")
-                                .temperature(0.7)
-                                .maxTokens(2000)
                                 .toolCallbacks(new SyncMcpToolCallbackProvider(sseMcpClient02()).getToolCallbacks())
                                 .build())
                 .build();
@@ -43,7 +41,7 @@ public class ApiTest {
     public McpSyncClient sseMcpClient02() {
         HttpClientSseClientTransport sseClientTransport = HttpClientSseClientTransport
                 .builder("http://127.0.0.1:8777")
-                .sseEndpoint("/api-gateway/test10001/mcp/sse")
+                .sseEndpoint("/api-gateway/gateway_001/mcp/sse")
                 .build();
 
         //防止超时
