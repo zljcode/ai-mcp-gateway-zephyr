@@ -12,4 +12,10 @@ public interface IAdminProtocolService {
 
     void saveGatewayProtocol(StorageCommandEntity commandEntity);
 
+    void deleteGatewayProtocol(Long protocolId);
+
+    void importGatewayProtocol(cn.zephyr.ai.domain.protocol.model.entity.AnalysisCommandEntity commandEntity);
+
+    java.util.List<cn.zephyr.ai.domain.protocol.model.valobj.http.HTTPProtocolVO> analysisProtocol(cn.zephyr.ai.domain.protocol.model.entity.AnalysisCommandEntity commandEntity);
+
 }

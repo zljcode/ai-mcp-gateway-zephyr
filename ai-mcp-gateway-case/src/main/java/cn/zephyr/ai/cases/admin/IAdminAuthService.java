@@ -12,4 +12,6 @@ public interface IAdminAuthService {
 
     void saveGatewayAuth(RegisterCommandEntity commandEntity);
 
+    void deleteGatewayAuth(String gatewayId);
+
 }

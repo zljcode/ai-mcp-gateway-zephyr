@@ -27,6 +27,17 @@ public class AuthRepository implements IAuthRepository {
     @Resource
     private IMcpGatewayDao mcpGatewayDao;
 
+    @Override
+    public boolean validate(String gatewayId, String apiKey) {
+        McpGatewayAuthPO poReq = new McpGatewayAuthPO();
+        poReq.setGatewayId(gatewayId);
+        poReq.setApiKey(apiKey);
+        McpGatewayAuthPO mcpGatewayAuthPO = mcpGatewayAuthDao.queryMcpGatewayAuthPO(poReq);
+        if (null == mcpGatewayAuthPO) {
+            return false;
+        }
+        return mcpGatewayAuthPO.getStatus().equals(AuthStatusEnum.AuthConfig.ENABLE.getCode());
+    }
 
     @Override
     public int queryEffectiveGatewayAuthCount(String gatewayId) {
@@ -35,6 +46,7 @@ public class AuthRepository implements IAuthRepository {
 
     @Override
     public McpGatewayAuthVO queryEffectiveGatewayAuthInfo(LicenseCommandEntity commandEntity) {
+
         McpGatewayAuthPO poReq = new McpGatewayAuthPO();
         poReq.setGatewayId(commandEntity.getGatewayId());
         poReq.setApiKey(commandEntity.getApiKey());
@@ -44,10 +56,8 @@ public class AuthRepository implements IAuthRepository {
             return null;
         }
 
-
         return McpGatewayAuthVO.builder()
                 .gatewayId(mcpGatewayAuthPO.getGatewayId())
-                .apiKey(mcpGatewayAuthPO.getApiKey())
                 .apiKey(mcpGatewayAuthPO.getApiKey())
                 .rateLimit(mcpGatewayAuthPO.getRateLimit())
                 .expireTime(mcpGatewayAuthPO.getExpireTime())
@@ -56,7 +66,9 @@ public class AuthRepository implements IAuthRepository {
     }
 
     @Override
-    public void insert(McpGatewayAuthVO mcpGatewayAuthVO) {
+    public void saveGatewayAuth(McpGatewayAuthVO mcpGatewayAuthVO) {
+        McpGatewayAuthPO existingAuth = mcpGatewayAuthDao.queryMcpGatewayAuthPO(McpGatewayAuthPO.builder().gatewayId(mcpGatewayAuthVO.getGatewayId()).build());
+
         McpGatewayAuthPO mcpGatewayAuthPO = McpGatewayAuthPO.builder()
                 .gatewayId(mcpGatewayAuthVO.getGatewayId())
                 .apiKey(mcpGatewayAuthVO.getApiKey())
@@ -64,15 +76,25 @@ public class AuthRepository implements IAuthRepository {
                 .expireTime(mcpGatewayAuthVO.getExpireTime())
                 .status(mcpGatewayAuthVO.getStatus().getCode())
                 .build();
-        mcpGatewayAuthDao.insert(mcpGatewayAuthPO);
+
+        if (existingAuth != null) {
+            mcpGatewayAuthDao.updateByGatewayId(mcpGatewayAuthPO);
+        } else {
+            mcpGatewayAuthDao.insert(mcpGatewayAuthPO);
+        }
     }
 
     @Override
     public AuthStatusEnum.GatewayConfig queryGatewayAuthStatus(String gatewayId) {
         McpGatewayPO mcpGatewayPO = mcpGatewayDao.queryMcpGatewayByGatewayId(gatewayId);
-        if(null == mcpGatewayPO) {
-            throw new AppException(McpErrorCodes.INVALID_PARAMS,"无效参数 gatewayId 不存在");
+        if (null == mcpGatewayPO) {
+            throw new AppException(McpErrorCodes.INVALID_PARAMS, "无效参数 gatewayId 不存在");
         }
         return AuthStatusEnum.GatewayConfig.get(mcpGatewayPO.getAuth());
+    }
+
+    @Override
+    public void deleteGatewayAuth(String gatewayId) {
+        mcpGatewayAuthDao.deleteByGatewayId(gatewayId);
     }
 }

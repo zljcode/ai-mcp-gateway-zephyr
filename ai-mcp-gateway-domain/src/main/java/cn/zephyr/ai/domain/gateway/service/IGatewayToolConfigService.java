@@ -13,5 +13,5 @@ public interface IGatewayToolConfigService {
 
     void updateGatewayToolProtocol(GatewayToolConfigCommandEntity commandEntity);
 
-
+    void deleteGatewayToolConfig(Long toolId);
 }

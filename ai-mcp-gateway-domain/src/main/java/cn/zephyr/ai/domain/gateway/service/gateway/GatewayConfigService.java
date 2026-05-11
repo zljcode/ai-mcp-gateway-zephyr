@@ -26,4 +26,6 @@ public class GatewayConfigService implements IGatewayConfigService {
     public void updateGatewayAuthStatus(GatewayConfigCommandEntity commandEntity) {
         gatewayRepository.updateGatewayAuthStatus(commandEntity);
     }
+
+
 }

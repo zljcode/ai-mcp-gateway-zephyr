@@ -17,4 +17,6 @@ public interface IProtocolStorage {
      * @return
      */
     List<Long> doStorage(StorageCommandEntity commandEntity);
+
+    void deleteGatewayProtocol(Long protocolId);
 }
