@@ -2,7 +2,9 @@ package cn.zephyr.ai.domain.gateway.adapter.repository;
 
 import cn.zephyr.ai.domain.gateway.model.entity.GatewayConfigCommandEntity;
 import cn.zephyr.ai.domain.gateway.model.entity.GatewayToolConfigCommandEntity;
+import cn.zephyr.ai.domain.gateway.model.valobj.GatewayToolConfigVO;
 
+import java.util.List;
 
 
 /**
@@ -21,5 +23,7 @@ public interface IGatewayRepository {
     void updateGatewayToolProtocol(GatewayToolConfigCommandEntity commandEntity);
 
     void deleteGatewayToolConfig(Long toolId);
+
+    List<GatewayToolConfigVO> queryGatewayToolConfigList(String gatewayId);
 
 }

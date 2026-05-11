@@ -2,9 +2,12 @@ package cn.zephyr.ai.domain.gateway.service.tool;
 
 import cn.zephyr.ai.domain.gateway.adapter.repository.IGatewayRepository;
 import cn.zephyr.ai.domain.gateway.model.entity.GatewayToolConfigCommandEntity;
+import cn.zephyr.ai.domain.gateway.model.valobj.GatewayToolConfigVO;
 import cn.zephyr.ai.domain.gateway.service.IGatewayToolConfigService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author Zhulejun @Zephyr
@@ -31,4 +34,10 @@ public class GatewayToolConfigService implements IGatewayToolConfigService {
     public void deleteGatewayToolConfig(Long toolId) {
         gatewayRepository.deleteGatewayToolConfig(toolId);
     }
+
+    @Override
+    public List<GatewayToolConfigVO> queryGatewayToolConfigList(String gatewayId) {
+        return gatewayRepository.queryGatewayToolConfigList(gatewayId);
+    }
+
 }
