@@ -7,7 +7,7 @@ import reactor.core.publisher.Mono;
 
 /**
  * @author Zhulejun @Zephyr
- * @description 定义接口标准
+ * @description Api网关服务接口
  * @create 2026/5/9 上午11:17
  */
 public interface IMcpGatewayService {
@@ -19,7 +19,7 @@ public interface IMcpGatewayService {
      * @return
      * @throws Exception
      */
-    Flux<ServerSentEvent<String>> establishSSEConnection(String gatewayId) throws Exception;
+    Flux<ServerSentEvent<String>> establishSSEConnection(String gatewayId,String apiKey) throws Exception;
 
     /**
      * 处理SSE消息
@@ -28,5 +28,5 @@ public interface IMcpGatewayService {
      * @param messageBody
      * @return
      */
-    Mono<ResponseEntity<Void>> handleMessage(String gatewayId, String sessionId, String messageBody);
+    Mono<ResponseEntity<Void>> handleMessage(String gatewayId,String apiKey, String sessionId, String messageBody);
 }
