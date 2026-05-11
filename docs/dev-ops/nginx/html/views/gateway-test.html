@@ -1,0 +1,509 @@
+<style>
+/* Gateway Test — two-column sticky layout */
+.gw-test-shell {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+}
+
+.gw-test-left {
+    flex: 1 1 55%;
+    min-width: 0;
+}
+
+.gw-test-right {
+    flex: 0 0 42%;
+    position: sticky;
+    top: 72px; /* navbar height + padding */
+    max-height: calc(100vh - 100px);
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+/* Response panel placeholder & states */
+.gw-response-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 320px;
+}
+
+.gw-response-empty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+    color: var(--text-tertiary);
+}
+
+.gw-response-empty i {
+    font-size: 2.2rem;
+    margin-bottom: 0.75rem;
+    opacity: 0.35;
+}
+
+.gw-response-empty p {
+    font-size: 0.9rem;
+    font-weight: 450;
+}
+
+.gw-response-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.9rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: -0.01em;
+    color: var(--text);
+}
+
+.gw-response-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.gw-response-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    font-size: 0.85rem;
+}
+
+.gw-response-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.gw-response-meta-label {
+    color: var(--text-tertiary);
+    font-weight: 450;
+}
+
+.gw-response-meta-value {
+    color: var(--text);
+    font-weight: 550;
+    font-family: 'JetBrains Mono', 'SF Mono', monospace;
+    font-size: 0.82rem;
+}
+
+.gw-response-content {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 180px;
+}
+
+.gw-response-content-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.55rem 1rem;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+.gw-response-content-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+}
+
+.gw-response-content-body pre {
+    margin: 0;
+    border: none;
+    background: transparent;
+    padding: 0;
+    font-size: 0.84rem;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+/* Error panel */
+.gw-error-panel {
+    background: var(--danger-soft);
+    border: 1px solid rgba(220,38,38,0.15);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.gw-error-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    font-weight: 600;
+    font-size: 0.88rem;
+    color: var(--danger);
+}
+
+.gw-error-body {
+    padding: 0 1.25rem 1rem;
+}
+
+.gw-error-body pre {
+    margin: 0;
+    font-size: 0.82rem;
+    background: transparent;
+    border: none;
+    padding: 0;
+    color: var(--danger);
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+/* API info card — compact */
+.gw-api-info {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+.gw-api-info summary {
+    padding: 0.65rem 1rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    cursor: pointer;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    user-select: none;
+    list-style: none;
+}
+
+.gw-api-info summary::-webkit-details-marker { display: none; }
+
+.gw-api-info summary::after {
+    content: '\F282';
+    font-family: 'bootstrap-icons';
+    float: right;
+    font-size: 0.7rem;
+    transition: transform 0.2s;
+    color: var(--text-tertiary);
+}
+
+.gw-api-info[open] summary::after {
+    transform: rotate(180deg);
+}
+
+.gw-api-info .api-info-body {
+    padding: 0 1rem 0.85rem;
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+}
+
+.gw-api-info .api-info-body code {
+    font-size: 0.8rem;
+}
+
+/* Form card — tighter */
+.gw-form-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+}
+
+.gw-form-card .form-section-title {
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-tertiary);
+    margin-bottom: 1rem;
+}
+
+/* Response status dot */
+.gw-status-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    margin-right: 6px;
+}
+
+.gw-status-dot.ok { background: var(--success); }
+.gw-status-dot.err { background: var(--danger); }
+
+/* Action buttons row */
+.gw-actions {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 0.25rem;
+}
+
+/* Responsive: stack on narrow screens */
+@media (max-width: 992px) {
+    .gw-test-shell {
+        flex-direction: column;
+    }
+    .gw-test-right {
+        flex: 1 1 auto;
+        position: static;
+        max-height: none;
+    }
+}
+</style>
+
+<div class="d-flex justify-content-between flex-wrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h4 class="fw-bold" style="letter-spacing:-0.03em;">网关调用测试</h4>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item">网关管理</li>
+            <li class="breadcrumb-item active" aria-current="page">网关调用测试</li>
+        </ol>
+    </nav>
+</div>
+
+<div class="gw-test-shell">
+
+    <!-- Left: Form -->
+    <div class="gw-test-left">
+        <div class="gw-form-card">
+            <div class="form-section-title">请求参数</div>
+            <form id="gatewayTestForm">
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label for="gatewayId" class="form-label">网关 ID <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="gatewayId" placeholder="gateway_001" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="authApiKey" class="form-label">认证 Key</label>
+                        <input type="text" class="form-control" id="authApiKey" placeholder="Bearer xxx 或 API Key">
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-5">
+                        <label for="timeout" class="form-label">超时时间</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="timeout" placeholder="默认" min="0" step="100">
+                            <span class="input-group-text">ms</span>
+                        </div>
+                    </div>
+                    <div class="col-md-7 d-flex align-items-end">
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="reload">
+                            <label class="form-check-label" for="reload">
+                                重新加载 LLM
+                            </label>
+                            <div class="form-text mt-1">协议有更新时勾选，强制刷新 LLM 上下文</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label for="message" class="form-label">请求消息 <span class="text-danger">*</span></label>
+                    <textarea class="form-control" id="message" rows="7" placeholder="输入要发送给网关的测试消息..." required></textarea>
+                </div>
+
+                <div class="gw-actions">
+                    <button type="submit" class="btn btn-primary px-4" id="submitBtn">
+                        <i class="bi bi-send-fill me-1"></i> 发送请求
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" id="clearBtn">
+                        <i class="bi bi-arrow-counterclockwise me-1"></i> 清空
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Right: Sticky Response + Info -->
+    <div class="gw-test-right">
+
+        <!-- Response Panel -->
+        <div class="gw-response-panel" id="responsePanel">
+            <!-- Empty state (visible by default) -->
+            <div class="gw-response-empty" id="responseEmpty">
+                <i class="bi bi-reply"></i>
+                <p>发送请求后在此查看响应</p>
+            </div>
+
+            <!-- Success/result state (hidden initially) -->
+            <div id="responseContent" style="display:none;flex-direction:column;flex:1;">
+                <div class="gw-response-header">
+                    <span id="responseHeaderTitle">响应结果</span>
+                    <span id="responseStatus"></span>
+                </div>
+                <div class="gw-response-body">
+                    <div class="gw-response-meta">
+                        <div class="gw-response-meta-item">
+                            <span class="gw-response-meta-label">状态码</span>
+                            <span class="gw-response-meta-value" id="respCode">-</span>
+                        </div>
+                        <div class="gw-response-meta-item">
+                            <span class="gw-response-meta-label">信息</span>
+                            <span class="gw-response-meta-value" id="respInfo">-</span>
+                        </div>
+                    </div>
+                    <div class="gw-response-content">
+                        <div class="gw-response-content-header">
+                            <span><i class="bi bi-robot me-1"></i>LLM 响应内容</span>
+                            <button class="btn btn-sm btn-outline-secondary" id="copyContentBtn" title="复制">
+                                <i class="bi bi-clipboard"></i>
+                            </button>
+                        </div>
+                        <div class="gw-response-content-body">
+                            <pre id="respContent"></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error Panel (hidden initially) -->
+        <div class="gw-error-panel" id="errorPanel" style="display:none;">
+            <div class="gw-error-header">
+                <i class="bi bi-exclamation-triangle-fill"></i> 请求异常
+            </div>
+            <div class="gw-error-body">
+                <pre id="errorMessage"></pre>
+            </div>
+        </div>
+
+        <!-- API Info (collapsible) -->
+        <details class="gw-api-info">
+            <summary>接口说明</summary>
+            <div class="api-info-body">
+                <div class="mb-2">
+                    <span class="gw-response-meta-label">POST</span>
+                    <code class="ms-2" id="display-test-url"></code>
+                </div>
+                <div class="row g-2">
+                    <div class="col-6">
+                        <div class="gw-response-meta-label mb-1">入参</div>
+                        <div style="font-size:0.78rem;line-height:1.8;">
+                            <div><code>gatewayId</code> 网关ID *</div>
+                            <div><code>authApiKey</code> 认证Key</div>
+                            <div><code>timeout</code> 超时ms</div>
+                            <div><code>message</code> 消息内容 *</div>
+                            <div><code>reload</code> 重载LLM</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="gw-response-meta-label mb-1">出参</div>
+                        <div style="font-size:0.78rem;line-height:1.8;">
+                            <div><code>code</code> 0000=成功</div>
+                            <div><code>info</code> 提示信息</div>
+                            <div><code>data.content</code> LLM响应</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </details>
+    </div>
+</div>
+
+<script>
+(function() {
+    $('#display-test-url').text(API_BASE_URL + '/admin/test_call_gateway');
+
+    $('#gatewayTestForm').on('submit', function(e) {
+        e.preventDefault();
+
+        var $btn = $('#submitBtn');
+        var originalHtml = $btn.html();
+        $btn.html('<span class="spinner-border spinner-border-sm me-1"></span>请求中...').prop('disabled', true);
+
+        // Reset panels
+        $('#errorPanel').hide();
+        $('#responseContent').hide();
+        $('#responseEmpty').show();
+
+        var payload = {
+            gatewayId: $('#gatewayId').val().trim(),
+            authApiKey: $('#authApiKey').val().trim(),
+            timeout: $('#timeout').val() ? parseInt($('#timeout').val()) : null,
+            message: $('#message').val().trim(),
+            reload: $('#reload').is(':checked')
+        };
+
+        $.ajax({
+            url: API_BASE_URL + '/admin/test_call_gateway',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(payload),
+            success: function(res) {
+                $('#responseEmpty').hide();
+                $('#responseContent').css('display', 'flex');
+
+                if (res.code === '0000') {
+                    $('#responseStatus').html('<span class="badge" style="color:var(--success)!important;border-color:rgba(21,128,61,0.25);"><span class="gw-status-dot ok"></span>成功</span>');
+                    $('#responseHeaderTitle').text('响应结果');
+                } else {
+                    $('#responseStatus').html('<span class="badge" style="color:var(--warning)!important;border-color:rgba(161,98,7,0.25);"><span class="gw-status-dot err"></span>业务异常</span>');
+                    $('#responseHeaderTitle').text('响应结果');
+                }
+
+                $('#respCode').text(res.code || '-');
+                $('#respInfo').text(res.info || '-');
+
+                var content = (res.data && res.data.content) ? res.data.content : JSON.stringify(res.data, null, 2);
+                $('#respContent').text(content);
+            },
+            error: function(xhr, status, error) {
+                $('#responseEmpty').hide();
+                $('#responseContent').css('display', 'flex');
+                $('#responseHeaderTitle').text('响应结果');
+                $('#responseStatus').html('<span class="badge" style="color:var(--danger)!important;border-color:rgba(220,38,38,0.25);"><span class="gw-status-dot err"></span>网络错误</span>');
+                $('#respCode').text(xhr.status || '-');
+                $('#respInfo').text(error || '未知错误');
+
+                var errMsg = '';
+                try {
+                    var errRes = JSON.parse(xhr.responseText);
+                    errMsg = JSON.stringify(errRes, null, 2);
+                } catch (ex) {
+                    errMsg = 'HTTP ' + xhr.status + ' ' + xhr.statusText + '\n' + (error || '未知错误');
+                }
+                $('#errorMessage').text(errMsg);
+                $('#errorPanel').show();
+            },
+            complete: function() {
+                $btn.html(originalHtml).prop('disabled', false);
+            }
+        });
+    });
+
+    $('#clearBtn').on('click', function() {
+        $('#gatewayTestForm')[0].reset();
+        $('#responseContent').hide();
+        $('#errorPanel').hide();
+        $('#responseEmpty').show();
+    });
+
+    $('#copyContentBtn').on('click', function() {
+        var text = $('#respContent').text();
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(text).then(function() {
+                var $btn = $('#copyContentBtn');
+                $btn.html('<i class="bi bi-check-lg"></i>');
+                setTimeout(function() { $btn.html('<i class="bi bi-clipboard"></i>'); }, 1500);
+            });
+        }
+    });
+})();
+</script>

@@ -54,7 +54,7 @@ public class AdminLLMService implements IAdminLLMService {
                     .baseUri(baseUrl)
                     .sseEndpoint(sseEndpoint)
                     .authApiKey(requestDTO.getAuthApiKey())
-                    .timeout(requestDTO.getTimeout())
+                    .timeout(null != requestDTO.getTimeout() ? requestDTO.getTimeout() : 30000)
                     .build();
 
             BuildChatModelCommandEntity commandEntity = BuildChatModelCommandEntity.builder()
