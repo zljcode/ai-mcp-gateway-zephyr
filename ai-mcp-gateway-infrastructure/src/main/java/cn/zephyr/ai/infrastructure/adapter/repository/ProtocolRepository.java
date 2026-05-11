@@ -76,4 +76,11 @@ public class ProtocolRepository implements IProtocolRepository {
 
         return protocolIds;
     }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void deleteGatewayProtocol(Long protocolId) {
+        mcpProtocolHttpDao.deleteByProtocolId(protocolId);
+        mcpProtocolHttpDao.deleteByProtocolId(protocolId);
+    }
 }

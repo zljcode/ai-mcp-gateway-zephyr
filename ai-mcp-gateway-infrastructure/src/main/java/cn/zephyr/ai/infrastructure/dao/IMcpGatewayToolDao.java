@@ -22,4 +22,15 @@ public interface IMcpGatewayToolDao {
 
     Long queryToolProtocolIdByToolName(McpGatewayToolPO mcpGatewayToolPOReq);
 
+    List<McpGatewayToolPO> queryAll();
+
+    int deleteByToolId(Long toolId);
+
+    List<McpGatewayToolPO> queryListByGatewayId(String gatewayId);
+
+    List<McpGatewayToolPO> queryToolList(McpGatewayToolPO query);
+
+    Long queryToolListCount(McpGatewayToolPO query);
+
+
 }

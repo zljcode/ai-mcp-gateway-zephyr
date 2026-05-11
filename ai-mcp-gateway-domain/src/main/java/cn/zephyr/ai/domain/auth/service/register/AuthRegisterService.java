@@ -38,8 +38,14 @@ public class AuthRegisterService implements IAuthRegisterService {
                 .build();
 
         //3、保存依据
-        repository.insert(mcpGatewayAuthVO);
+        repository.saveGatewayAuth(mcpGatewayAuthVO);
 
         return apiKey;
     }
+
+    @Override
+    public void deleteGatewayAuth(String gatewayId) {
+        repository.deleteGatewayAuth(gatewayId);
+    }
+
 }

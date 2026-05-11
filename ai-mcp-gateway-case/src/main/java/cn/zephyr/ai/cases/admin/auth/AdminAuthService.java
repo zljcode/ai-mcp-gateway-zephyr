@@ -25,4 +25,9 @@ public class AdminAuthService implements IAdminAuthService {
         authRegisterService.register(commandEntity);
     }
 
+    @Override
+    public void deleteGatewayAuth(String gatewayId) {
+        authRegisterService.deleteGatewayAuth(gatewayId);
+    }
+
 }

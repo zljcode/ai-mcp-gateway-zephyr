@@ -1,5 +1,6 @@
 package cn.zephyr.ai.infrastructure.dao.po;
 
+import cn.zephyr.ai.infrastructure.dao.po.base.BasePagePO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,7 +17,7 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class McpGatewayToolPO {
+public class McpGatewayToolPO  extends BasePagePO {
 
     /**
      * 自增ID
