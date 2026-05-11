@@ -7,6 +7,8 @@ import cn.zephyr.ai.domain.auth.model.valobj.enums.AuthStatusEnum;
 import cn.zephyr.ai.infrastructure.dao.IMcpGatewayAuthDao;
 import cn.zephyr.ai.infrastructure.dao.po.McpGatewayAuthPO;
 import cn.zephyr.ai.infrastructure.dao.po.McpGatewayPO;
+import cn.zephyr.ai.types.enums.McpErrorCodes;
+import cn.zephyr.ai.types.exception.AppException;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Repository;
 import cn.zephyr.ai.infrastructure.dao.IMcpGatewayDao;
@@ -43,7 +45,9 @@ public class AuthRepository implements IAuthRepository {
         }
 
 
-        return McpGatewayAuthVO.builder().gatewayId(mcpGatewayAuthPO.getGatewayId())
+        return McpGatewayAuthVO.builder()
+                .gatewayId(mcpGatewayAuthPO.getGatewayId())
+                .apiKey(mcpGatewayAuthPO.getApiKey())
                 .apiKey(mcpGatewayAuthPO.getApiKey())
                 .rateLimit(mcpGatewayAuthPO.getRateLimit())
                 .expireTime(mcpGatewayAuthPO.getExpireTime())
@@ -66,6 +70,9 @@ public class AuthRepository implements IAuthRepository {
     @Override
     public AuthStatusEnum.GatewayConfig queryGatewayAuthStatus(String gatewayId) {
         McpGatewayPO mcpGatewayPO = mcpGatewayDao.queryMcpGatewayByGatewayId(gatewayId);
+        if(null == mcpGatewayPO) {
+            throw new AppException(McpErrorCodes.INVALID_PARAMS,"无效参数 gatewayId 不存在");
+        }
         return AuthStatusEnum.GatewayConfig.get(mcpGatewayPO.getAuth());
     }
 }

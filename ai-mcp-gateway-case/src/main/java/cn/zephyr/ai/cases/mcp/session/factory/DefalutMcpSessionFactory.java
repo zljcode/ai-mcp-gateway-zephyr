@@ -34,6 +34,7 @@ public class DefalutMcpSessionFactory {
     @Builder
     public static class DynamicContext {
         private SessionConfigVO sessionConfigVO;
+        private String apiKey;
     }
 
 
