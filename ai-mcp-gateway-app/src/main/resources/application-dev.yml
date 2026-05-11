@@ -18,9 +18,9 @@ thread:
 # 数据库配置；启动时配置数据库资源信息
 spring:
   datasource:
-    username: root
-    password: 102311243
-    url: jdbc:mysql://127.0.0.1:13306/ai_mcp_gateway_v2?useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&serverTimezone=UTC&useSSL=true
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    url: ${DB_URL}
     driver-class-name: com.mysql.cj.jdbc.Driver
   hikari:
     pool-name: Retail_HikariCP
@@ -37,7 +37,7 @@ spring:
   ai:
     openai:
       base-url: https://api.deepseek.com
-      api-key: sk-7bce599f41d544bfa6ccf5ef248f797e
+      api-key: ${DEEPSEEK_API_KEY}
       chat:
         options:
           model: deepseek-v4-flash
