@@ -12,4 +12,6 @@ import java.util.List;
 public interface IProtocolRepository {
 
     List<Long> saveHttpProtocolAndMapping(List<HTTPProtocolVO> httpProtocolVOS);
+
+    void deleteGatewayProtocol(Long protocolId);
 }

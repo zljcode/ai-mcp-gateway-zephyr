@@ -1,5 +1,6 @@
 package cn.zephyr.ai.infrastructure.dao.po;
 
+import cn.zephyr.ai.infrastructure.dao.po.base.BasePagePO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class McpGatewayAuthPO {
+public class McpGatewayAuthPO extends BasePagePO {
 
     /** 主键 ID。 */
     private Long id;

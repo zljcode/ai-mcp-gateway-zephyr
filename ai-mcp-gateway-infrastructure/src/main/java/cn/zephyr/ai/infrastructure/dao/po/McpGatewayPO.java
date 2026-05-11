@@ -1,21 +1,20 @@
 package cn.zephyr.ai.infrastructure.dao.po;
 
+import cn.zephyr.ai.infrastructure.dao.po.base.BasePagePO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
- * MCP 网关配置表对应的持久化对象。
+ * MCP网关配置表
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class McpGatewayPO {
+public class McpGatewayPO extends BasePagePO {
 
     /**
      * 主键ID

@@ -10,4 +10,9 @@ import cn.zephyr.ai.domain.auth.model.entity.RegisterCommandEntity;
 public interface IAuthRegisterService {
 
     String register(RegisterCommandEntity commandEntity);
+
+    /**
+     * 删除
+     */
+    void deleteGatewayAuth(String gatewayId);
 }

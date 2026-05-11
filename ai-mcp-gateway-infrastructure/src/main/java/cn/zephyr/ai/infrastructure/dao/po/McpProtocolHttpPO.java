@@ -1,5 +1,7 @@
 package cn.zephyr.ai.infrastructure.dao.po;
 
+import cn.zephyr.ai.infrastructure.dao.po.base.BasePagePO;
+import com.fasterxml.jackson.databind.ser.Serializers;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +16,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class McpProtocolHttpPO {
+public class McpProtocolHttpPO extends BasePagePO {
 
     /** 主键 ID。 */
     private Long id;
