@@ -38,6 +38,10 @@
         </dependency>
         <dependency>
             <groupId>cn.zephyr.ai</groupId>
+            <artifactId>ai-mcp-gateway-types</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cn.zephyr.ai</groupId>
             <artifactId>ai-mcp-gateway-domain</artifactId>
         </dependency>
         <dependency>
