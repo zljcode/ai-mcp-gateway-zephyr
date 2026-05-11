@@ -10,9 +10,9 @@ import com.google.common.util.concurrent.RateLimiter;
 import jakarta.annotation.Resource;
 import cn.zephyr.ai.domain.auth.model.entity.RateLimitCommandEntity;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -37,7 +37,7 @@ public class AuthRateLimitService implements IAuthRateLimitService {
         String gatewayId = commandEntity.getGatewayId();
         String apiKey = commandEntity.getApiKey();
 
-        if(null == gatewayId || null == apiKey){
+        if (StringUtils.isBlank(apiKey)) {
             return false;
         }
 
