@@ -670,7 +670,7 @@ public class AdminController implements IAdminService {
 
     @RequestMapping(value = "test_call_gateway", method = RequestMethod.POST)
     @Override
-    public Response<GatewayLLMResponseDTO> testCallGateway(GatewayLLMRequestDTO requestDTO) {
+    public Response<GatewayLLMResponseDTO> testCallGateway(@RequestBody GatewayLLMRequestDTO requestDTO) {
         try {
             log.info("测试请求网关服务开始 gatewayId: {}", requestDTO.getGatewayId());
 

@@ -16,7 +16,7 @@
 <header class="navbar navbar-expand-md sticky-top">
     <div class="container-fluid">
         <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">
-            <i class="bi bi-hdd-network-fill"></i> MCP Gateway
+            MCP Gateway
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -24,9 +24,9 @@
         
         <div class="navbar-nav ms-auto d-flex align-items-center">
             <div class="nav-item text-nowrap d-flex align-items-center gap-3 pe-3">
-                <span class="text-muted small"><i class="bi bi-person-circle"></i> Admin</span>
-                <a class="nav-link text-danger d-flex align-items-center gap-1" href="#" id="logoutBtn" style="font-weight: 500;">
-                    <i class="bi bi-box-arrow-right"></i> 退出登录
+                <span class="text-secondary small"><i class="bi bi-person-circle me-1"></i>Admin</span>
+                <a class="nav-link d-flex align-items-center gap-1" href="#" id="logoutBtn">
+                    <i class="bi bi-box-arrow-right"></i> 退出
                 </a>
             </div>
         </div>
@@ -53,6 +53,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#" data-target="gateway-list">
                             <i class="bi bi-list-ul"></i> 网关列表
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-target="gateway-test">
+                            <i class="bi bi-send-check"></i> 网关调用测试
                         </a>
                     </li>
                     <!-- 二级目录: 元素配置 -->
@@ -94,12 +99,12 @@
 
 <!-- Toast 通知容器 -->
 <div class="toast-container position-fixed bottom-0 end-0 p-3">
-  <div id="liveToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+  <div id="liveToast" class="toast align-items-center" role="alert" aria-live="assertive" aria-atomic="true">
     <div class="d-flex">
       <div class="toast-body d-flex align-items-center gap-2" id="toastMessage">
         <i class="bi bi-check-circle-fill"></i> <span>操作成功！</span>
       </div>
-      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
     </div>
   </div>
 </div>
