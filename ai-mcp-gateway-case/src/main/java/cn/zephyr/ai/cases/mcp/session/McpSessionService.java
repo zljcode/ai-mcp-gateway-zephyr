@@ -27,10 +27,13 @@ public class McpSessionService implements IMcpSessionService {
      * @return
      */
     @Override
-    public Flux<ServerSentEvent<String>> createMcpSession(String gatewayId) throws Exception {
+    public Flux<ServerSentEvent<String>> createMcpSession(String gatewayId,String apiKey) throws Exception {
+
         StrategyHandler<String, DefalutMcpSessionFactory.DynamicContext, Flux<ServerSentEvent<String>>>
                 strategyHandler = defalutMcpSessionFactory.strategyHandler();
+        DefalutMcpSessionFactory.DynamicContext dynamicContext = new DefalutMcpSessionFactory.DynamicContext();
+        dynamicContext.setApiKey(apiKey);
 
-        return strategyHandler.apply(gatewayId, new DefalutMcpSessionFactory.DynamicContext());
+        return strategyHandler.apply(gatewayId, dynamicContext);
     }
 }

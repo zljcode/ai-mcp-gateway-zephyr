@@ -5,9 +5,11 @@ import cn.zephyr.ai.cases.mcp.session.AbstractMcpMessageSupport;
 import cn.zephyr.ai.cases.mcp.session.factory.DefalutMcpSessionFactory;
 import cn.zephyr.ai.domain.auth.model.entity.LicenseCommandEntity;
 import cn.zephyr.ai.domain.auth.service.IAuthLicenseService;
+import cn.zephyr.ai.domain.auth.service.license.AuthLicenseService;
 import cn.zephyr.ai.types.enums.McpErrorCodes;
 import cn.zephyr.ai.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -25,10 +27,20 @@ public class VerifyNode extends AbstractMcpMessageSupport {
 
     @Resource(name = "mcpSessionSessionNode")
     private SessionNode sessionNode;
+    @Autowired
+    private AuthLicenseService authLicenseService;
 
 
     @Override
     protected Flux<ServerSentEvent<String>> doApply(String requestParameter, DefalutMcpSessionFactory.DynamicContext dynamicContext) throws Exception {
+        log.info("创建会话-VerifyNode:{}", requestParameter);
+
+        //检查鉴权 apiKey
+        boolean isCheckSuccess = authLicenseService.checkLicense(new LicenseCommandEntity(requestParameter,dynamicContext.getApiKey()));
+
+        if(!isCheckSuccess){
+            throw new AppException(McpErrorCodes.INSUFFICIENT_PERMISSIONS,"fail to auth apikey");
+        }
 
         return router(requestParameter, dynamicContext);
     }

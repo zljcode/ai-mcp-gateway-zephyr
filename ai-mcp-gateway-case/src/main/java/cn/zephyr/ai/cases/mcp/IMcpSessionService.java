@@ -18,5 +18,5 @@ public interface IMcpSessionService {
      * @param gatewayId 网关ID（后续还要扩展 apiKey 验证字段）
      * @return
      */
-    public Flux<ServerSentEvent<String>> createMcpSession(String gatewayId) throws Exception;
+    public Flux<ServerSentEvent<String>> createMcpSession(String gatewayId,String apiKey) throws Exception;
 }
