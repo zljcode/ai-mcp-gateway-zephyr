@@ -4,10 +4,7 @@ import cn.zephyr.ai.api.IAdminService;
 import cn.zephyr.ai.api.dto.*;
 import cn.zephyr.ai.api.response.Response;
 import cn.zephyr.ai.api.response.ResponsePage;
-import cn.zephyr.ai.cases.admin.IAdminAuthService;
-import cn.zephyr.ai.cases.admin.IAdminGatewayService;
-import cn.zephyr.ai.cases.admin.IAdminManageService;
-import cn.zephyr.ai.cases.admin.IAdminProtocolService;
+import cn.zephyr.ai.cases.admin.*;
 import cn.zephyr.ai.domain.admin.model.entity.*;
 import cn.zephyr.ai.domain.auth.model.entity.RegisterCommandEntity;
 import cn.zephyr.ai.domain.gateway.model.entity.GatewayConfigCommandEntity;
@@ -19,6 +16,7 @@ import cn.zephyr.ai.domain.protocol.model.entity.AnalysisCommandEntity;
 import cn.zephyr.ai.domain.protocol.model.valobj.http.HTTPProtocolVO;
 import cn.zephyr.ai.types.enums.GatewayEnum;
 import cn.zephyr.ai.types.enums.ResponseCode;
+import com.alibaba.fastjson.JSON;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -46,6 +44,8 @@ public class AdminController implements IAdminService {
     private IAdminProtocolService adminProtocolService;
     @Resource
     private IAdminManageService adminManageService;
+    @Resource
+    private IAdminLLMService adminLLMService;
 
     @RequestMapping(value = "save_gateway_config", method = RequestMethod.POST)
     @Override
@@ -662,6 +662,29 @@ public class AdminController implements IAdminService {
         } catch (Exception e) {
             log.error("删除网关认证配置失败 gatewayId: {}", gatewayId, e);
             return Response.<GatewayConfigResponseDTO>builder()
+                    .code(ResponseCode.UN_ERROR.getCode())
+                    .info(ResponseCode.UN_ERROR.getInfo())
+                    .build();
+        }
+    }
+
+    @RequestMapping(value = "test_call_gateway", method = RequestMethod.POST)
+    @Override
+    public Response<GatewayLLMResponseDTO> testCallGateway(GatewayLLMRequestDTO requestDTO) {
+        try {
+            log.info("测试请求网关服务开始 gatewayId: {}", requestDTO.getGatewayId());
+
+            GatewayLLMResponseDTO responseDTO = adminLLMService.testCallGateway(requestDTO);
+            log.info("测试请求网关服务完成 gatewayId: {} resDTO:{}", requestDTO.getGatewayId(), JSON.toJSONString(responseDTO));
+
+            return Response.<GatewayLLMResponseDTO>builder()
+                    .code(ResponseCode.SUCCESS.getCode())
+                    .info(ResponseCode.SUCCESS.getInfo())
+                    .data(responseDTO)
+                    .build();
+        } catch (Exception e) {
+            log.error("测试请求网关服务失败 gatewayId: {}", requestDTO.getGatewayId(), e);
+            return Response.<GatewayLLMResponseDTO>builder()
                     .code(ResponseCode.UN_ERROR.getCode())
                     .info(ResponseCode.UN_ERROR.getInfo())
                     .build();
