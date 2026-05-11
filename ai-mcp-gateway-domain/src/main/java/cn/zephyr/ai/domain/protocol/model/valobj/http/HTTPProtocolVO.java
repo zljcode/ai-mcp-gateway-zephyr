@@ -20,6 +20,7 @@ public class HTTPProtocolVO {
     private String httpHeaders;
     private String httpMethod;
     private Integer timeout;
+    private Long  protocolId;
 
     private List<ProtocolMapping> mappings;
 
