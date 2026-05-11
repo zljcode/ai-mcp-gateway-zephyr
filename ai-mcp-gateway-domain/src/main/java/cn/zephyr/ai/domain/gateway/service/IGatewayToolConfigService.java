@@ -1,6 +1,9 @@
 package cn.zephyr.ai.domain.gateway.service;
 
 import cn.zephyr.ai.domain.gateway.model.entity.GatewayToolConfigCommandEntity;
+import cn.zephyr.ai.domain.gateway.model.valobj.GatewayToolConfigVO;
+
+import java.util.List;
 
 /**
  * @author Zhulejun @Zephyr
@@ -14,4 +17,7 @@ public interface IGatewayToolConfigService {
     void updateGatewayToolProtocol(GatewayToolConfigCommandEntity commandEntity);
 
     void deleteGatewayToolConfig(Long toolId);
+
+    List<GatewayToolConfigVO> queryGatewayToolConfigList(String gatewayId);
+
 }

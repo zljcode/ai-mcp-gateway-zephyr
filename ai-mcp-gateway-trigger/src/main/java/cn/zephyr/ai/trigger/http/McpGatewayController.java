@@ -62,7 +62,7 @@ public class McpGatewayController implements IMcpGatewayService {
     @GetMapping(value = "{gatewayId}/mcp/sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     @Override
     public Flux<ServerSentEvent<String>> establishSSEConnection(@PathVariable("gatewayId") String gatewayId,
-                                                                @RequestParam("api_key") String apiKey) throws Exception {
+                                                                @RequestParam(value = "api_key", required = false, defaultValue = "") String apiKey) throws Exception {
         try {
             log.info("建立MCP SSE连接，gatewayId:{}", gatewayId);
             if (StringUtils.isBlank(gatewayId)) {
