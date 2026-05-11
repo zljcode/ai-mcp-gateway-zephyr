@@ -8,9 +8,10 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 
 /**
- * @author Zhulejun @Zephyr
- * @description 权限注册命令实体对象
- * @create 2026/5/10 下午10:25
+ * 注册命令实体
+ *
+ * @author xiaofuge bugstack.cn @小傅哥
+ * 2026/2/22 10:22
  */
 @Data
 @Builder
