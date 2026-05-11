@@ -36,7 +36,9 @@ const API_ENDPOINTS = {
     // 根据网关ID获取工具列表
     GET_GATEWAY_TOOL_LIST_BY_ID: `${API_BASE_URL}/admin/query_gateway_tool_list_by_gateway_id`,
     // 删除网关工具配置
-    DELETE_GATEWAY_TOOL: `${API_BASE_URL}/admin/delete_gateway_tool_config`
+    DELETE_GATEWAY_TOOL: `${API_BASE_URL}/admin/delete_gateway_tool_config`,
+    // 测试网关调用
+    TEST_CALL_GATEWAY: `${API_BASE_URL}/admin/test_call_gateway`
 };
 
 // 模拟登录账号
