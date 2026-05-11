@@ -23,5 +23,7 @@ public interface IMcpGatewayDao {
 
     McpGatewayPO queryMcpGatewayByGatewayId(String gatewayId);
 
+    int updateAuthStatusByGatewayId(McpGatewayPO po);
+
 }
 
