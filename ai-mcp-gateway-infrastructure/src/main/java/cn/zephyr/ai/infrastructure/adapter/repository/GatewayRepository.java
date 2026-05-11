@@ -94,4 +94,9 @@ public class GatewayRepository implements IGatewayRepository {
             throw new AppException(DB_UPDATE_FAIL.getCode(), DB_UPDATE_FAIL.getInfo());
         }
     }
+
+    @Override
+    public void deleteGatewayToolConfig(Long toolId) {
+        mcpGatewayToolDao.deleteByToolId(toolId);
+    }
 }
