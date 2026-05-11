@@ -67,6 +67,8 @@ $(document).ready(function() {
             loadGatewayProtocolList();
         } else if (targetId === 'gateway-auth') {
             loadGatewayAuthList();
+        } else if (targetId === 'gateway-test') {
+            // 网关调用测试页面 — 逻辑由页面内联脚本自行初始化
         }
     }
 
